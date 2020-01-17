@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts'
 import Head from 'next/head'
+
+const WAValidator = require('@swyftx/api-crypto-address-validator')
+import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts'
 
 import Nav from '../components/nav'
 
@@ -25,11 +27,23 @@ const Home = () => {
 
     ws.onmessage = async event => {
       const socketMessage = JSON.parse(event.data)
-      console.log(socketMessage)
       setCoin(prevValues => {
         const mapData = socketMessage.x.inputs.map(coin => {
+          const litecoin = WAValidator.validate(coin.prev_out.addr, 'litecoin')
+          const btc = WAValidator.validate(coin.prev_out.addr, 'BTC')
+          let coinName
+          if (litecoin) {
+            console.log('Litecoin')
+            coinName = 'Litecoin'
+          }
+
+          if (btc) {
+            console.log('BTC')
+            coinName = 'BTC'
+          }
+
           return {
-            name: coin.sequence,
+            name: coinName,
             uv: coin.value,
             pv: coin.prev_out.value,
             amt: coin.script
@@ -48,15 +62,12 @@ const Home = () => {
       </Head>
 
       <Nav />
-      <LineChart width={1200} height={600} data={coin}>
-        <YAxis type="number" yAxisId={0} domain={[0, 1020]} />
-        <YAxis type="number" orientation="right" yAxisId={1} />
-        <YAxis type="number" orientation="right" yAxisId={2} />
+      <LineChart width={1000} height={700} data={coin}>
         <XAxis dataKey="name" />
-        <CartesianGrid stroke="#f5f5f5" />
-        <Line dataKey="uv" stroke="#ff7300" strokeWidth={2} yAxisId={0} />
-        <Line dataKey="pv" stroke="#387908" strokeWidth={2} yAxisId={1} />
-        <Line dataKey="amt" stroke="#38abc8" strokeWidth={2} yAxisId={2} />
+        <YAxis />
+        <CartesianGrid stroke="#eee" />
+        <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+        <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
       </LineChart>
     </div>
   )
