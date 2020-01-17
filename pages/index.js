@@ -1,88 +1,65 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts'
 import Head from 'next/head'
+
 import Nav from '../components/nav'
 
-const Home = () => (
-  <div>
-    <Head>
-      <title>Home</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+const Home = () => {
+  const [coin, setCoin] = useState([])
 
-    <Nav />
+  useEffect(() => {
+    const ws = new WebSocket('wss://ws.blockchain.info/inv')
 
-    <div className="hero">
-      <h1 className="title">Welcome to Next.js!</h1>
-      <p className="description">
-        To get started, edit <code>pages/index.js</code> and save to reload.
-      </p>
+    ws.onopen = () => {
+      const message = JSON.stringify({
+        op: 'unconfirmed_sub'
+      })
 
-      <div className="row">
-        <a href="https://nextjs.org/docs" className="card">
-          <h3>Documentation &rarr;</h3>
-          <p>Learn more about Next.js in the documentation.</p>
-        </a>
-        <a href="https://nextjs.org/learn" className="card">
-          <h3>Next.js Learn &rarr;</h3>
-          <p>Learn about Next.js by following an interactive tutorial!</p>
-        </a>
-        <a
-          href="https://github.com/zeit/next.js/tree/master/examples"
-          className="card"
-        >
-          <h3>Examples &rarr;</h3>
-          <p>Find other example boilerplates on the Next.js GitHub.</p>
-        </a>
-      </div>
+      ws.send(message)
+    }
+
+    ws.onerror = err => {
+      console.error('Socket encountered error: ', err.message, 'Closing socket')
+      ws.close()
+    }
+
+    ws.onmessage = async event => {
+      const socketMessage = JSON.parse(event.data)
+      console.log(socketMessage)
+      setCoin(prevValues => {
+        const mapData = socketMessage.x.inputs.map(coin => {
+          return {
+            name: coin.sequence,
+            uv: coin.value,
+            pv: coin.prev_out.value,
+            amt: coin.script
+          }
+        })
+        return [...prevValues, ...mapData]
+      })
+    }
+  }, [])
+
+  return (
+    <div>
+      <Head>
+        <title>Home</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <Nav />
+      <LineChart width={1200} height={600} data={coin}>
+        <YAxis type="number" yAxisId={0} domain={[0, 1020]} />
+        <YAxis type="number" orientation="right" yAxisId={1} />
+        <YAxis type="number" orientation="right" yAxisId={2} />
+        <XAxis dataKey="name" />
+        <CartesianGrid stroke="#f5f5f5" />
+        <Line dataKey="uv" stroke="#ff7300" strokeWidth={2} yAxisId={0} />
+        <Line dataKey="pv" stroke="#387908" strokeWidth={2} yAxisId={1} />
+        <Line dataKey="amt" stroke="#38abc8" strokeWidth={2} yAxisId={2} />
+      </LineChart>
     </div>
-
-    <style jsx>{`
-      .hero {
-        width: 100%;
-        color: #333;
-      }
-      .title {
-        margin: 0;
-        width: 100%;
-        padding-top: 80px;
-        line-height: 1.15;
-        font-size: 48px;
-      }
-      .title,
-      .description {
-        text-align: center;
-      }
-      .row {
-        max-width: 880px;
-        margin: 80px auto 40px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      .card {
-        padding: 18px 18px 24px;
-        width: 220px;
-        text-align: left;
-        text-decoration: none;
-        color: #434343;
-        border: 1px solid #9b9b9b;
-      }
-      .card:hover {
-        border-color: #067df7;
-      }
-      .card h3 {
-        margin: 0;
-        color: #067df7;
-        font-size: 18px;
-      }
-      .card p {
-        margin: 0;
-        padding: 12px 0 0;
-        font-size: 13px;
-        color: #333;
-      }
-    `}</style>
-  </div>
-)
+  )
+}
 
 export default Home
