@@ -1,5 +1,5 @@
 export default function(state, action) {
-  const { type } = action
+  const {type} = action
   switch (type) {
     case 'EXAMPLE':
       return {

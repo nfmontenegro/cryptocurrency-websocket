@@ -1,3 +1,3 @@
-const { registerUser } = require('./user')
+const {registerUser} = require('./user')
 
-module.exports = { registerUser }
+module.exports = {registerUser}
