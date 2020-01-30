@@ -1,12 +1,17 @@
 export default function(state, action) {
   const {type} = action
   switch (type) {
-    case 'EXAMPLE':
+    case 'LOADING':
+      return {
+        ...state,
+        loading: true
+      }
+    case 'LOGIN_SUCCESS':
       return {
         ...state,
         isAuthenticated: true
       }
-    case 'LOG_OUT':
+    case 'LOGOUT_SUCCESS':
       return {
         ...state,
         isAuthenticated: false
