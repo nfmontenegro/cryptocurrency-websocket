@@ -1,13 +1,15 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 
+require('dotenv').config()
+
+const {APP_BASE_URL, PORT} = require('./config')
 const {userRouter} = require('./routes')
 
 const app = express()
 
 app.use(bodyParser.json())
 
-app.use('/api', userRouter)
+app.use('/api/v1', userRouter)
 
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => console.log(`Server is running in port: ${PORT}`))
+app.listen(PORT, () => console.log(`Server is running in: ${process.env.APP_BASE_URL}`))
