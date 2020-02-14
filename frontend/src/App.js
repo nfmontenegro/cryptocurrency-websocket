@@ -1,9 +1,8 @@
 import React from 'react'
-import './App.css'
-import Example from './Example'
+import {Login} from './views'
 
 function App() {
-  return <Example />
+  return <Login />
 }
 
 export default App
