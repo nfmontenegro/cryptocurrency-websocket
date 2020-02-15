@@ -1,8 +1,20 @@
-import React from 'react'
-import {Button} from '../../../styled'
+import React, {useState} from 'react'
+import {Button} from 'antd'
+import {CustomForm} from '../../../components'
 
-const Login = () => {
-  return <Button primary>Test </Button>
+const Login = props => {
+  const [fields, setFields] = useState({username: ''})
+
+  const handleChange = changeFields => {
+    const {value, name} = changeFields
+    return setFields({
+      ...fields,
+      [name]: value
+    })
+  }
+
+  console.log('Fields!!', fields)
+  return <CustomForm {...fields} onChange={handleChange} />
 }
 
 export default Login
