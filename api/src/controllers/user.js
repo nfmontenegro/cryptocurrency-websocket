@@ -3,12 +3,7 @@ const {hash, compare} = require('bcryptjs')
 
 const {prisma} = require('../../generated/prisma-client')
 
-const pagination = (page, limit) => {
-  const skipPerPage = limit * page
-  return {
-    where: {orderBy: 'email_DESC', first: limit || 10, skip: skipPerPage || 0}
-  }
-}
+const {paginate, buildConnectionResponse} = require('../utils')
 
 const registerUser = (req, res) => {
   const {password, email} = req.body
@@ -32,15 +27,12 @@ const registerUser = (req, res) => {
 }
 
 const getUsers = (req, res) => {
-  const page = parseInt(req.query.page) || 1
-  const limit = parseInt(req.query.limit) || 10
-  const skipPerPage = page * limit
+  const {page, limit} = req.query
 
   return prisma
-    .usersConnection({orderBy: 'email_ASC', first: limit, skip: skipPerPage})
-    .then(users => {
-      res.status(200).json({page, hasNextPage: users.pageInfo.hasNextPage, hasPreviousPage: users.pageInfo.hasPreviousPage, data: users.edges.map(edge => edge.node)})
-    })
+    .usersConnection(paginate(page, limit))
+    .then(buildConnectionResponse)
+    .then(data => res.status(200).json(data))
     .catch(err => res.status(500).json({message: err.message}))
 }
 
