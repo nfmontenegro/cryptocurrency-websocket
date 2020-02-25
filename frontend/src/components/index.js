@@ -1,3 +1,4 @@
-import CustomForm from './Form'
+import Button from './Button'
+import Input from './Input'
 
-export {CustomForm}
+export {Button, Input}

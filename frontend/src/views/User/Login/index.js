@@ -1,20 +1,32 @@
 import React, {useState} from 'react'
-import {Button} from 'antd'
-import {CustomForm} from '../../../components'
+import {useFormik} from 'formik'
 
-const Login = props => {
-  const [fields, setFields] = useState({username: ''})
+import {Button, Input} from '../../../components'
 
-  const handleChange = changeFields => {
-    const {value, name} = changeFields
-    return setFields({
-      ...fields,
-      [name]: value
-    })
-  }
+const Login = () => {
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: ''
+    },
+    onSubmit: values => {
+      alert(JSON.stringify(values, null, 2))
+    }
+  })
 
-  console.log('Fields!!', fields)
-  return <CustomForm {...fields} onChange={handleChange} />
+  const {handleSubmit, handleChange, values} = formik
+
+  return (
+    <div className="grid grid-cols-8">
+      <div class="col-start-4 col-span-6">
+        <form className=" max-w-sm" onSubmit={handleSubmit}>
+          <Input type="text" label="Email" name="email" onChange={handleChange} value={values.email} />
+          <Input type="password" label="Password" name="password" onChange={handleChange} value={values.password} />
+          <Button value="Sign up" />
+        </form>
+      </div>
+    </div>
+  )
 }
 
 export default Login

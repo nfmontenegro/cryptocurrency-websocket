@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
+import './css/tailwind.css'
 import App from './App'
 import {AuthProvider} from './context/store/auth-context'
-import 'antd/dist/antd.css'
 
 ReactDOM.render(
   <AuthProvider>
