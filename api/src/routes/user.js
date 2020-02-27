@@ -5,10 +5,10 @@ const {registerUser, getUser, getUsers, deleteUser, login} = require('../control
 
 const router = express.Router()
 
-router.get('/users/:id', getUser)
+router.get('/users/:id', verifyToken, getUser)
 router.get('/users', verifyToken, getUsers)
 router.post('/users', registerUser)
-router.delete('/users/:id', deleteUser)
+router.delete('/users/:id', verifyToken, deleteUser)
 router.post('/login', login)
 
 module.exports = router

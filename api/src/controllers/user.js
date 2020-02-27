@@ -22,7 +22,7 @@ const registerUser = (req, res) => {
         password: hashedPassword
       })
     })
-    .then(user => res.status(201).json({data: user}))
+    .then(user => res.status(201).json(user))
     .catch(err => res.status(500).json({message: err.message}))
 }
 
@@ -46,7 +46,7 @@ const getUser = (req, res) => {
     .user({id})
     .then(user => {
       if (user) {
-        res.status(200).json({data: user})
+        res.status(200).json(user)
       } else {
         res.status(404).json({message: 'User not found'})
       }
@@ -64,7 +64,7 @@ const deleteUser = (req, res) => {
     .deleteUser({id})
     .then(user => {
       if (user) {
-        res.status(200).json({data: user})
+        res.status(200).json(user)
       } else {
         res.status(404).json({message: 'User not found'})
       }

@@ -1,3 +1,4 @@
-import Login from './Login'
+import Signup from './Register'
+import Welcome from './Welcome'
 
-export {Login}
+export {Signup, Welcome}
