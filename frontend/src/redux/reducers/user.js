@@ -1,5 +1,10 @@
-export default function(state, action) {
-  const {type} = action
+const INITIAL_STATE = {
+  loading: false,
+  data: null
+}
+
+export default function(state = INITIAL_STATE, action) {
+  const {type, payload} = action
   switch (type) {
     case 'LOADING':
       return {
@@ -9,7 +14,8 @@ export default function(state, action) {
     case 'REGISTER_SUCCESS':
       return {
         ...state,
-        isAuthenticated: true
+        loading: false,
+        data: payload
       }
     default:
       return state

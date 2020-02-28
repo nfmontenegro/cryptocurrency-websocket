@@ -1,8 +1,10 @@
 import React, {useState} from 'react'
 import {useFormik} from 'formik'
+import {useDispatch} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 import * as Yup from 'yup'
 
+import {registerUserAction} from '../../../redux/actions'
 import {Button, Input, Notification} from '../../../components'
 
 const INITIAL_VALUES = {
@@ -20,21 +22,27 @@ const SignupSchema = Yup.object().shape({
     .required('Required')
 })
 
-const Signup = () => {
+const Signup = props => {
+  const dispatch = useDispatch()
   const [notification, setNotification] = useState({show: false, message: null})
   const history = useHistory()
   const formik = useFormik({
     initialValues: INITIAL_VALUES,
     validationSchema: SignupSchema,
     onSubmit: (values, {resetForm}) => {
-      //   .catch(error => {
-      //   setNotification({show: true, message: error.response.data.message})
-      // })
-      // .finally(() => {
-      //   setSubmitting(false)
-      //   setTimeout(() => setNotification(false), 2500)
-      //   resetForm()
-      // })
+      dispatch(registerUserAction(values))
+        .then(response => {
+          const {id, email} = response.payload
+          history.push(`/welcome?id=${id}&user=${email}`)
+        })
+        .catch(error => {
+          setNotification({show: true, message: error.response.data.message})
+        })
+        .finally(() => {
+          setSubmitting(false)
+          setTimeout(() => setNotification(false), 2500)
+          resetForm()
+        })
     }
   })
 

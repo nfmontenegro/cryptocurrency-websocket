@@ -1,13 +1,16 @@
-import {API} from '../../utils'
+import {registerUser} from '../../api'
 
-const registerUser = formValues => {
-  const userRegistered = API({
-    url: '/users',
-    method: 'POST',
-    data: formValues
-  })
-    .then(response => response.data)
-    .catch(err => err.response)
+const registerUserAction = formValues => {
+  return dispatch => {
+    return registerUser(formValues)
+      .then(response =>
+        dispatch({
+          type: 'REGISTER_SUCCESS',
+          payload: response
+        })
+      )
+      .catch(err => err)
+  }
 }
 
-export {registerUser}
+export {registerUserAction}
