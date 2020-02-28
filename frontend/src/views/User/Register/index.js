@@ -3,7 +3,6 @@ import {useFormik} from 'formik'
 import {useHistory} from 'react-router-dom'
 import * as Yup from 'yup'
 
-import {API} from '../../../utils'
 import {Button, Input, Notification} from '../../../components'
 
 const INITIAL_VALUES = {
@@ -28,23 +27,14 @@ const Signup = () => {
     initialValues: INITIAL_VALUES,
     validationSchema: SignupSchema,
     onSubmit: (values, {resetForm}) => {
-      API({
-        url: '/users',
-        method: 'POST',
-        data: values
-      })
-        .then(response => {
-          const {id, email} = response.data
-          history.push(`/welcome?user=${email}&id=${id}`)
-        })
-        .catch(error => {
-          setNotification({show: true, message: error.response.data.message})
-        })
-        .finally(() => {
-          setSubmitting(false)
-          setTimeout(() => setNotification(false), 2500)
-          resetForm()
-        })
+      //   .catch(error => {
+      //   setNotification({show: true, message: error.response.data.message})
+      // })
+      // .finally(() => {
+      //   setSubmitting(false)
+      //   setTimeout(() => setNotification(false), 2500)
+      //   resetForm()
+      // })
     }
   })
 

@@ -6,15 +6,10 @@ export default function(state, action) {
         ...state,
         loading: true
       }
-    case 'LOGIN_SUCCESS':
+    case 'REGISTER_SUCCESS':
       return {
         ...state,
         isAuthenticated: true
-      }
-    case 'LOGOUT_SUCCESS':
-      return {
-        ...state,
-        isAuthenticated: false
       }
     default:
       return state
