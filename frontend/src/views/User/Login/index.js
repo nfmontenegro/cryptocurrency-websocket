@@ -4,7 +4,6 @@ import {useDispatch} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 import * as Yup from 'yup'
 
-import {registerUserAction} from '../../../redux/actions'
 import {Button, Input, Notification} from '../../../components'
 
 const INITIAL_VALUES = {
@@ -22,25 +21,26 @@ const SignupSchema = Yup.object().shape({
     .required('Required')
 })
 
-const Signup = () => {
+const Login = () => {
   const dispatch = useDispatch()
   const [notification, setNotification] = useState({show: false, message: null})
   const history = useHistory()
+
   const formik = useFormik({
     initialValues: INITIAL_VALUES,
     validationSchema: SignupSchema,
     onSubmit: (values, {resetForm}) => {
-      dispatch(registerUserAction(values))
-        .then(response => {
-          const {id, email} = response.payload
-          // resetForm()
-          history.push(`/welcome?id=${id}&user=${email}`)
-        })
-        .catch(error => {
-          setSubmitting(false)
-          setNotification({show: true, message: error.response.data.message})
-          setTimeout(() => setNotification(false), 2500)
-        })
+      // dispatch(registerUserAction(values))
+      //   .then(response => {
+      //     const {id, email} = response.payload
+      //     // resetForm()
+      //     history.push(`/welcome?id=${id}&user=${email}`)
+      //   })
+      //   .catch(error => {
+      //     setSubmitting(false)
+      //     setNotification({show: true, message: error.response.data.message})
+      //     setTimeout(() => setNotification(false), 2500)
+      //   })
     }
   })
 
@@ -54,7 +54,7 @@ const Signup = () => {
           <form className=" max-w-sm" onSubmit={handleSubmit}>
             <Input type="email" label="Email" name="email" onChange={handleChange} value={values.email} />
             <Input type="password" label="Password" name="password" onChange={handleChange} value={values.password} />
-            <Button value="Sign up" isSubmitting={isSubmitting} />
+            <Button value="Sign in" isSubmitting={isSubmitting} />
           </form>
         </div>
       </div>
@@ -62,4 +62,4 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default Login

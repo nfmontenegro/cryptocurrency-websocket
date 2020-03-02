@@ -1,3 +1,4 @@
+import {CREATE_USER} from '../constants'
 import {registerUser} from '../../api'
 
 const registerUserAction = formValues => {
@@ -5,7 +6,7 @@ const registerUserAction = formValues => {
     return registerUser(formValues)
       .then(response =>
         dispatch({
-          type: 'REGISTER_SUCCESS',
+          type: CREATE_USER,
           payload: response
         })
       )

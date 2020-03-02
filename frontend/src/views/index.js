@@ -1,3 +1,3 @@
-import {Signup, Welcome} from './User'
+import {Signup, Signin, Welcome} from './User'
 
-export {Signup, Welcome}
+export {Signup, Signin, Welcome}

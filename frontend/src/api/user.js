@@ -8,6 +8,7 @@ const registerUser = data =>
   })
     .then(response => {
       //TODO: check if user exist
+
       return response.data
     })
     .catch(err => err.response)

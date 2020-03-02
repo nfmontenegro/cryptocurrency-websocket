@@ -11,7 +11,7 @@ export default function(state = INITIAL_STATE, action) {
         ...state,
         loading: true
       }
-    case 'REGISTER_SUCCESS':
+    case 'CREATE_USER':
       return {
         ...state,
         loading: false,
