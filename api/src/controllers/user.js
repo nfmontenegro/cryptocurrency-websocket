@@ -7,7 +7,6 @@ const {paginate, buildConnectionResponse} = require('../utils')
 
 const registerUser = (req, res) => {
   const {password, email} = req.body
-
   const response = Promise.all([hash(password, 10), prisma.user({email})])
 
   return response
@@ -28,7 +27,6 @@ const registerUser = (req, res) => {
 
 const getUsers = (req, res) => {
   const {page, limit} = req.query
-
   return prisma
     .usersConnection(paginate(page, limit))
     .then(buildConnectionResponse)
