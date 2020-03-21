@@ -12,7 +12,6 @@ test('should return all users', async () => {
   }
 
   const requestGetUsers = await getUsers(request, response)
-  expect(response.json).toHaveBeenCalledTimes(1)
   expect(response.status).toHaveBeenCalledTimes(1)
   expect(response.status).toHaveBeenCalledWith(200)
 
@@ -41,7 +40,6 @@ test('should return one user', async () => {
   }
 
   const requestGetUser = await getUser(request, response)
-  expect(response.json).toHaveBeenCalledTimes(1)
   expect(response.status).toHaveBeenCalledTimes(1)
   expect(response.status).toHaveBeenCalledWith(200)
 
@@ -61,7 +59,6 @@ test('should return error if dont have id params', async () => {
   request.params = {}
   const requestGetUser = await getUser(request, response)
 
-  expect(response.json).toHaveBeenCalledTimes(1)
   expect(response.status).toHaveBeenCalledTimes(1)
   expect(response.status).toHaveBeenCalledWith(400)
 
