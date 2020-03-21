@@ -31,8 +31,9 @@ jobs:
         npm run build --if-present
         npm audit fix
     - name: Run Jest
-      run: cd api
       uses: stefanoeb/jest-action@1.0.2
+      with:
+        jestArgs: api
       env:
         CI: true
 
