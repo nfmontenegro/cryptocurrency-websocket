@@ -27,26 +27,28 @@ const registerUser = (req, res) => {
 
 const getUsers = (req, res) => {
   const {page, limit} = req.query
-  return prisma
-    .usersConnection(paginate(page, limit))
-    .then(buildConnectionResponse)
-    .then(data => res.status(200).json(data))
-    .catch(err => res.status(500).json({message: err.message}))
+  return (
+    prisma
+      .users()
+      // .usersConnection(paginate(page, limit))
+      // .then(buildConnectionResponse)
+      .then(data => res.status(200).json(data))
+      .catch(err => res.status(500).json({message: err.message}))
+  )
 }
 
 const getUser = (req, res) => {
   const {id} = req.params
   if (!id) {
-    res.status(400).json({message: 'Param resource not found'})
+    return res.status(400).json({message: 'Param resource not found'})
   }
-
   return prisma
     .user({id})
     .then(user => {
       if (user) {
-        res.status(200).json(user)
+        return res.status(200).json(user)
       } else {
-        res.status(404).json({message: 'User not found'})
+        return res.status(404).json({message: 'User not found'})
       }
     })
     .catch(err => res.status(500).json({message: err.message}))
@@ -91,7 +93,7 @@ const login = (req, res) => {
 
       res.status(200).json({
         data: {
-          token: sign({userId: user.id}, 'shhhsecreeet')
+          token: sign({userId: user.id}, 'psssshhhhtt! secret')
         }
       })
     })

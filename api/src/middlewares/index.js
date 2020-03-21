@@ -4,6 +4,7 @@ const {SECRET} = require('../config')
 const verifyJWT = (token, secret) =>
   new Promise((resolve, reject) =>
     jwt.verify(token, SECRET, (err, decoded) => {
+      console.log(err, decoded)
       if (err) {
         reject(err)
       } else {
@@ -13,7 +14,11 @@ const verifyJWT = (token, secret) =>
   )
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers['authorization']
+  let token = req.headers['authorization']
+  if (token.startsWith('Bearer ')) {
+    token = token.slice(7, token.length)
+  }
+
   if (token) {
     verifyJWT(token, SECRET)
       .then(verifiedToken => {

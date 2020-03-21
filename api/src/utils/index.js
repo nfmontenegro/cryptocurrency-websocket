@@ -11,6 +11,7 @@ const paginate = (pageNumber, limitNumber) => {
 }
 
 const buildConnectionResponse = ({edges, pageInfo}) => {
+  console.log(edges)
   const nodes = edges.map(edge => edge.node)
   const {hasNextPage, hasPreviousPage} = pageInfo
 
