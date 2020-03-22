@@ -41,6 +41,7 @@ jobs:
         docker ps -a
         docker start api_postgres_1
         docker start api_prisma_1
+        prisma deploy
         npm test
       env:
         CI: true
