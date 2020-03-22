@@ -12,7 +12,6 @@ test('should return all users', async () => {
   }
 
   const requestGetUsers = await getUsers(request, response)
-  expect(response.status).toHaveBeenCalledTimes(1)
   expect(response.status).toHaveBeenCalledWith(200)
 
   const spyResponseStatus = jest.spyOn(response, 'status')
@@ -40,7 +39,6 @@ test('should return one user', async () => {
   }
 
   const requestGetUser = await getUser(request, response)
-  expect(response.status).toHaveBeenCalledTimes(1)
   expect(response.status).toHaveBeenCalledWith(200)
 
   expect(requestGetUser).toEqual({
