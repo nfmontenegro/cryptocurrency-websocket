@@ -1,5 +1,4 @@
 {
-  "testRegex": "((\\.|/*.)(spec))\\.js?$",
   "collectCoverage": true,
   "coverageReporters": [
     "json",
