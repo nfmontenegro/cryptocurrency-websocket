@@ -39,7 +39,7 @@ jobs:
         cd api
         docker-compose up
     - name: Run tests
-        run: npm test
+      run: npm test
       env:
         CI: true
 
