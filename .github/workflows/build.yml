@@ -38,6 +38,7 @@ jobs:
       run: |
         cd api
         docker-compose up -d
+        docker ps -a
     - name: Run tests
       run: |
         cd api
