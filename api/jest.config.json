@@ -4,5 +4,6 @@
   "coverageReporters": [
     "json",
     "html"
-  ]
+  ],
+  "notify": true
 }

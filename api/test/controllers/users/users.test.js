@@ -73,3 +73,7 @@ test('should return error if dont have id params', async () => {
 
   expect(requestGetUser).toEqual({message: 'Param resource not found'})
 })
+
+afterAll(async done => {
+  done()
+})
