@@ -39,6 +39,8 @@ jobs:
         cd api
         docker-compose up -d
         docker ps -a
+        docker start api_postgres_1
+        docker start api_prisma_1
     - name: Run tests
       run: |
         cd api
