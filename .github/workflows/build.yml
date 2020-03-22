@@ -28,7 +28,9 @@ jobs:
         npm run build --if-present
         npm audit fix
     - name: Login to Docker Registry
-      run: docker login -u "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
+      run: |
+        cd api
+        docker login -u "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
