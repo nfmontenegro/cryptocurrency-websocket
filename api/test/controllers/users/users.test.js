@@ -33,6 +33,8 @@ test('should return all users', async () => {
       password: '$2a$10$DDP.K5NlbqqiXZ13SZ9.TuAulCjc066UlaLy7QeyklXPnppy67FWK'
     }
   ])
+  spyResponseJson.mockClear()
+  spyResponseStatus.mockClear()
 })
 
 test('should return one user', async () => {
@@ -79,8 +81,6 @@ test('should return error if dont have id params', async () => {
   expect(spyResponseJson).toHaveBeenCalledTimes(1)
 
   expect(requestGetUser).toEqual({message: 'Param resource not found'})
-})
-
-afterAll(async done => {
-  done()
+  spyResponseJson.mockClear()
+  spyResponseStatus.mockClear()
 })

@@ -27,7 +27,6 @@ jobs:
         npm install
         npm run build --if-present
         npm audit fix
-        npm test
       env:
         CI: true
 
