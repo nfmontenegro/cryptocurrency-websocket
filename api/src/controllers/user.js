@@ -32,7 +32,7 @@ const getUsers = (req, res) => {
       .users()
       // .usersConnection(paginate(page, limit))
       // .then(buildConnectionResponse)
-      .then(data => res.status(200).json(data))
+      .then(data => res.json(data))
       .catch(err => res.status(500).json({message: err.message}))
   )
 }
