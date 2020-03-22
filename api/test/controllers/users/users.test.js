@@ -1,3 +1,4 @@
+const {usersMockData} = require('../../__mocks__')
 const {getUser, getUsers} = require('../../../src/controllers')
 
 const {mockRequest, mockResponse} = require('./util/interceptor')
@@ -10,6 +11,8 @@ test('should return all users', async () => {
     page: 1,
     limit: 10
   }
+
+  response.json = jest.fn(() => usersMockData)
 
   const requestGetUsers = await getUsers(request, response)
   expect(response.json).toHaveBeenCalledTimes(1)
@@ -40,6 +43,8 @@ test('should return one user', async () => {
     id: 'ck825lukf009s07498txoai9r'
   }
 
+  response.json = jest.fn(() => usersMockData[0])
+
   const requestGetUser = await getUser(request, response)
   expect(response.json).toHaveBeenCalledTimes(1)
   expect(response.status).toHaveBeenCalledTimes(1)
@@ -59,6 +64,8 @@ test('should return error if dont have id params', async () => {
   const response = mockResponse()
 
   request.params = {}
+  response.json = jest.fn(() => ({message: 'Param resource not found'}))
+
   const requestGetUser = await getUser(request, response)
 
   expect(response.json).toHaveBeenCalledTimes(1)
