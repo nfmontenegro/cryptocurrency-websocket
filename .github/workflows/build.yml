@@ -30,7 +30,7 @@ jobs:
     - name: Login to Docker Registry
       run: |
         cd api
-        docker login -u "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
+        docker login -u "$DOCKER_USERNAME" --password-stdin <<< "$DOCKER_PASSWORD"
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
