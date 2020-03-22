@@ -28,8 +28,7 @@ const registerUser = (req, res) => {
 const getUsers = async (req, res) => {
   const {page, limit} = req.query
   try {
-    const users = await prisma.users()
-    console.log(users)
+    const users = await req.prisma.users()
     return res.status(200).json(users)
   } catch (err) {
     console.log(err)
@@ -37,21 +36,24 @@ const getUsers = async (req, res) => {
   }
 }
 
-const getUser = (req, res) => {
-  const {id} = req.params
-  if (!id) {
-    return res.status(400).json({message: 'Param resource not found'})
+const getUser = async (req, res) => {
+  try {
+    const {id} = req.params
+
+    if (!id) {
+      return res.status(400).json({message: 'Param resource not found'})
+    }
+
+    const user = await req.prisma.user({id})
+    if (user) {
+      return res.status(200).json(user)
+    } else {
+      return res.status(404).json({message: 'User not found'})
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({message: err.message})
   }
-  return prisma
-    .user({id})
-    .then(user => {
-      if (user) {
-        return res.status(200).json(user)
-      } else {
-        return res.status(404).json({message: 'User not found'})
-      }
-    })
-    .catch(err => res.status(500).json({message: err.message}))
 }
 
 const deleteUser = (req, res) => {
