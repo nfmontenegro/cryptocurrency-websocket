@@ -29,8 +29,10 @@ const getUsers = async (req, res) => {
   const {page, limit} = req.query
   try {
     const users = await prisma.users()
+    console.log(users)
     return res.status(200).json(users)
   } catch (err) {
+    console.log(err)
     res.status(500).json({message: err.message})
   }
 }
