@@ -35,7 +35,9 @@ jobs:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     - name: Start env
-      run: docker-compose up
+      run: |
+        cd api
+        docker-compose up
       env:
         CI: true
 
