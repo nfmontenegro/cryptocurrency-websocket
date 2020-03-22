@@ -27,7 +27,13 @@ jobs:
         npm install
         npm run build --if-present
         npm audit fix
-        npm test
+    - name: Login to Docker Registry
+      run: docker login -u "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Start env
+      run: docker-compose up
       env:
         CI: true
 

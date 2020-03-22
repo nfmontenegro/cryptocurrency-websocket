@@ -8,9 +8,14 @@
     "dev": "nodemon src/index",
     "test": "jest --config ./jest.config.json",
     "test:watch": "npm run test -- --watch",
-    "test:coverage": "jest --detectOpenHandles --coverage"
+    "test:coverage": "jest --coverage"
   },
-  "keywords": ["node.js", "javascript", "jest", "prisma"],
+  "keywords": [
+    "node.js",
+    "javascript",
+    "jest",
+    "prisma"
+  ],
   "author": "Nicolás Flores Montenegro",
   "license": "ISC",
   "dependencies": {
