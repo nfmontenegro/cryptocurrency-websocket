@@ -25,16 +25,14 @@ const registerUser = (req, res) => {
     .catch(err => res.status(500).json({message: err.message}))
 }
 
-const getUsers = (req, res) => {
+const getUsers = async (req, res) => {
   const {page, limit} = req.query
-  return (
-    prisma
-      .users()
-      // .usersConnection(paginate(page, limit))
-      // .then(buildConnectionResponse)
-      .then(data => res.json(data))
-      .catch(err => res.status(500).json({message: err.message}))
-  )
+  try {
+    const users = await prisma.users()
+    return res.status(200).json(users)
+  } catch (err) {
+    res.status(500).json({message: err.message})
+  }
 }
 
 const getUser = (req, res) => {
