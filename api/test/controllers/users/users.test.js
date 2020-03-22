@@ -19,11 +19,6 @@ test('should return all users', async () => {
   expect(response.status).toHaveBeenCalledTimes(1)
   expect(response.status).toHaveBeenCalledWith(200)
 
-  const spyResponseStatus = jest.spyOn(response, 'status')
-  expect(spyResponseStatus).toHaveBeenCalledTimes(1)
-
-  const spyResponseJson = jest.spyOn(response, 'json')
-  expect(spyResponseJson).toHaveBeenCalledTimes(1)
   expect(requestGetUsers).toEqual([
     {
       name: 'Nicolas',
@@ -33,54 +28,53 @@ test('should return all users', async () => {
       password: '$2a$10$DDP.K5NlbqqiXZ13SZ9.TuAulCjc066UlaLy7QeyklXPnppy67FWK'
     }
   ])
-  spyResponseJson.mockClear()
-  spyResponseStatus.mockClear()
 })
 
-test('should return one user', async () => {
-  const request = mockRequest()
-  const response = mockResponse()
+// test('should return one user', async () => {
+//   const request = mockRequest()
+//   const response = mockResponse()
 
-  request.params = {
-    id: 'ck825lukf009s07498txoai9r'
-  }
+//   request.params = {
+//     id: 'ck825lukf009s07498txoai9r'
+//   }
 
-  response.json = jest.fn(() => usersMockData[0])
+//   const requestGetUser = await getUser(request, response)
+//   expect(response.json).toHaveBeenCalledTimes(1)
+//   expect(response.status).toHaveBeenCalledTimes(1)
+//   expect(response.status).toHaveBeenCalledWith(200)
 
-  const requestGetUser = await getUser(request, response)
-  expect(response.json).toHaveBeenCalledTimes(1)
-  expect(response.status).toHaveBeenCalledTimes(1)
-  expect(response.status).toHaveBeenCalledWith(200)
+//   expect(requestGetUser).toEqual({
+//     name: 'Nicolas',
+//     email: 'nico123@gmail.com',
+//     lastname: 'Flores',
+//     id: 'ck825lukf009s07498txoai9r',
+//     password: '$2a$10$DDP.K5NlbqqiXZ13SZ9.TuAulCjc066UlaLy7QeyklXPnppy67FWK'
+//   })
+// })
 
-  expect(requestGetUser).toEqual({
-    name: 'Nicolas',
-    email: 'nico123@gmail.com',
-    lastname: 'Flores',
-    id: 'ck825lukf009s07498txoai9r',
-    password: '$2a$10$DDP.K5NlbqqiXZ13SZ9.TuAulCjc066UlaLy7QeyklXPnppy67FWK'
-  })
-})
+// test('should return user not found', async () => {
+//   const request = mockRequest()
+//   const response = mockResponse()
 
-test('should return error if dont have id params', async () => {
-  const request = mockRequest()
-  const response = mockResponse()
+//   request.params = {
+//     id: '11111'
+//   }
 
-  request.params = {}
-  response.json = jest.fn(() => ({message: 'Param resource not found'}))
+//   const requestGetUser = await getUser(request, response)
+//   expect(requestGetUser).toEqual({message: 'User not found'})
+// })
 
-  const requestGetUser = await getUser(request, response)
+// test('should return error if dont have id params', async () => {
+//   const request = mockRequest()
+//   const response = mockResponse()
 
-  expect(response.json).toHaveBeenCalledTimes(1)
-  expect(response.status).toHaveBeenCalledTimes(1)
-  expect(response.status).toHaveBeenCalledWith(400)
+//   request.params = {}
 
-  const spyResponseStatus = jest.spyOn(response, 'status')
-  expect(spyResponseStatus).toHaveBeenCalledTimes(1)
+//   const requestGetUser = await getUser(request, response)
 
-  const spyResponseJson = jest.spyOn(response, 'json')
-  expect(spyResponseJson).toHaveBeenCalledTimes(1)
+//   expect(response.json).toHaveBeenCalledTimes(1)
+//   expect(response.status).toHaveBeenCalledTimes(1)
+//   expect(response.status).toHaveBeenCalledWith(400)
 
-  expect(requestGetUser).toEqual({message: 'Param resource not found'})
-  spyResponseJson.mockClear()
-  spyResponseStatus.mockClear()
-})
+//   expect(requestGetUser).toEqual({message: 'Param resource not found'})
+// })
