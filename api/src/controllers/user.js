@@ -3,26 +3,21 @@ const {hash, compare} = require('bcryptjs')
 
 const {prisma} = require('../../generated/prisma-client')
 
-const {paginate, buildConnectionResponse} = require('../utils')
+const registerUser = async (req, res) => {
+  try {
+    const {password, email} = req.body
+    const [hashedPassword, hadUser] = await Promise.all([hash(password, 10), prisma.user({email})])
 
-const registerUser = (req, res) => {
-  const {password, email} = req.body
-  const response = Promise.all([hash(password, 10), prisma.user({email})])
+    if (hadUser && hadUser.email === email) {
+      res.status(400).json({message: `User with email ${email} exist`})
+    }
 
-  return response
-    .then(data => {
-      const [hashedPassword, hadUser] = data
-      if (hadUser && hadUser.email === email) {
-        res.status(400).json({message: `User with email ${email} exist`})
-      }
+    const user = await req.prisma.createUser({...req.body, password: hashedPassword})
 
-      return prisma.createUser({
-        ...req.body,
-        password: hashedPassword
-      })
-    })
-    .then(user => res.status(201).json(user))
-    .catch(err => res.status(500).json({message: err.message}))
+    return res.status(201).json(user)
+  } catch (err) {
+    return res.status(500).json({message: err.message})
+  }
 }
 
 const getUsers = async (req, res) => {
@@ -45,61 +40,58 @@ const getUser = async (req, res) => {
     }
 
     const user = await req.prisma.user({id})
+
     if (user) {
       return res.status(200).json(user)
     } else {
       return res.status(404).json({message: 'User not found'})
     }
   } catch (err) {
-    console.log(err)
     res.status(500).json({message: err.message})
   }
 }
 
-const deleteUser = (req, res) => {
-  const {id} = req.params
-  if (!id) {
-    res.status(400).json({message: 'Param resource not found'})
-  }
+const deleteUser = async (req, res) => {
+  try {
+    const {id} = req.params
 
-  return prisma
-    .deleteUser({id})
-    .then(user => {
-      if (user) {
-        res.status(200).json(user)
-      } else {
-        res.status(404).json({message: 'User not found'})
-      }
-    })
-    .catch(err => res.status(500).json({message: err.message}))
+    if (!id) {
+      res.status(400).json({message: 'Param resource not found'})
+    }
+
+    const user = await req.prisma.deleteUser({id})
+
+    if (user) {
+      return res.status(200).json(user)
+    } else {
+      return res.status(404).json({message: 'User not found'})
+    }
+  } catch (err) {
+    return res.status(500).json({message: err.message})
+  }
 }
 
-const login = (req, res) => {
-  const {password, email} = req.body
+const login = async (req, res) => {
+  try {
+    const {password, email} = req.body
+    const user = await req.prisma.user({email})
 
-  return prisma
-    .user({email})
-    .then(user => {
-      if (!user) {
-        res.status(400).json({message: `No such user found ${email}`})
-      }
-      return {password: compare(password, user.password), user}
-    })
-    .then(data => {
-      const {password, user} = data
-      const isValidPassword = Promise.resolve(password)
+    if (!user) {
+      res.status(400).json({message: `No such user found ${email}`})
+    }
 
-      if (!isValidPassword) {
-        res.status(400).json({message: 'Invalid password'})
-      }
+    const isValidPassword = await compare(password, user.password)
 
-      res.status(200).json({
-        data: {
-          token: sign({userId: user.id}, 'psssshhhhtt! secret')
-        }
-      })
-    })
-    .catch(err => res.status(500).json({message: err.message}))
+    if (!isValidPassword) {
+      return res.status(400).json({message: 'Invalid password'})
+    }
+
+    const token = sign({userId: user.id}, 'psssshhhhtt! secret')
+
+    return res.status(200).json({data: token})
+  } catch (err) {
+    return res.status(500).json({message: err.message})
+  }
 }
 
 module.exports = {

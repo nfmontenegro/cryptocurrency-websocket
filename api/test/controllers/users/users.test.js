@@ -68,9 +68,6 @@ describe('Test user controllers', () => {
   })
 
   test('should return error if dont have id params', async () => {
-    const request = mockRequest()
-    const response = mockResponse()
-
     request.params = {}
     response.json = jest.fn(() => ({message: 'Param resource not found'}))
 
