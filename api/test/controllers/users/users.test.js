@@ -16,11 +16,6 @@ describe('Test user controllers', () => {
     limit: 10
   }
 
-  request.prisma = {
-    users: () => usersMockData,
-    user: () => usersMockData[0]
-  }
-
   response.json = jest.fn(() => usersMockData)
 
   test('should return all users', async () => {
@@ -61,30 +56,30 @@ describe('Test user controllers', () => {
     })
   })
 
-  // test('should return user not found', async () => {
-  //   const request = mockRequest()
-  //   const response = mockResponse()
+  test('should return user not found', async () => {
+    request.params = {
+      id: '11111'
+    }
 
-  //   request.params = {
-  //     id: '11111'
-  //   }
+    response.json = jest.fn(() => ({message: 'User not found'}))
 
-  //   const requestGetUser = await getUser(request, response)
-  //   expect(requestGetUser).toEqual({message: 'User not found'})
-  // })
+    const requestGetUser = await getUser(request, response)
+    expect(requestGetUser).toEqual({message: 'User not found'})
+  })
 
-  // test('should return error if dont have id params', async () => {
-  //   const request = mockRequest()
-  //   const response = mockResponse()
+  test('should return error if dont have id params', async () => {
+    const request = mockRequest()
+    const response = mockResponse()
 
-  //   request.params = {}
+    request.params = {}
+    response.json = jest.fn(() => ({message: 'Param resource not found'}))
 
-  //   const requestGetUser = await getUser(request, response)
+    const requestGetUser = await getUser(request, response)
 
-  //   expect(response.json).toHaveBeenCalledTimes(1)
-  //   expect(response.status).toHaveBeenCalledTimes(1)
-  //   expect(response.status).toHaveBeenCalledWith(400)
+    expect(response.json).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledWith(400)
 
-  //   expect(requestGetUser).toEqual({message: 'Param resource not found'})
-  // })
+    expect(requestGetUser).toEqual({message: 'Param resource not found'})
+  })
 })
