@@ -6,14 +6,13 @@ const {prisma} = require('../../generated/prisma-client')
 const registerUser = async (req, res) => {
   try {
     const {password, email} = req.body
-    const [hashedPassword, hadUser] = await Promise.all([hash(password, 10), prisma.user({email})])
+    const [hashedPassword, hadUser] = await Promise.all([hash(password, 10), req.prisma.user({email})])
 
     if (hadUser && hadUser.email === email) {
       res.status(400).json({message: `User with email ${email} exist`})
     }
 
     const user = await req.prisma.createUser({...req.body, password: hashedPassword})
-
     return res.status(201).json(user)
   } catch (err) {
     return res.status(500).json({message: err.message})

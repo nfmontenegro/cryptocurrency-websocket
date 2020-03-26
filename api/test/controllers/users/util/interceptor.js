@@ -8,7 +8,11 @@ module.exports = {
     req.query = jest.fn().mockReturnValue(req)
     req.prisma = {
       users: () => usersMockData,
-      user: () => usersMockData[0]
+      user: () => usersMockData[0],
+      createUser: user => ({
+        id: '11111',
+        ...user
+      })
     }
     return req
   },

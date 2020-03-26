@@ -1,5 +1,5 @@
 const {usersMockData} = require('../../__mocks__')
-const {getUser, getUsers} = require('../../../src/controllers')
+const {getUser, getUsers, registerUser} = require('../../../src/controllers')
 
 const {mockRequest, mockResponse} = require('./util/interceptor')
 
@@ -78,5 +78,26 @@ describe('Test user controllers', () => {
     expect(response.status).toHaveBeenCalledWith(400)
 
     expect(requestGetUser).toEqual({message: 'Param resource not found'})
+  })
+
+  test('Should create user', async () => {
+    const mockUser = {
+      name: 'Nicolás Camilo',
+      lastname: 'Flores Montenegro',
+      email: 'nico@gmail.com',
+      password: '12345678'
+    }
+
+    request.body = mockUser
+
+    response.json = jest.fn(() => mockUser)
+
+    const requestRegisterUser = await registerUser(request, response)
+
+    expect(response.json).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledWith(201)
+
+    expect(requestRegisterUser).toBe(mockUser)
   })
 })
