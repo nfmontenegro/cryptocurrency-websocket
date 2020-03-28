@@ -76,7 +76,7 @@ const login = async (req, res) => {
     const user = await req.prisma.user({email})
 
     if (!user) {
-      res.status(400).json({message: `No such user found ${email}`})
+      return res.status(400).json({message: `No such user found ${email}`})
     }
 
     const isValidPassword = await compare(password, user.password)

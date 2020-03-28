@@ -1,5 +1,5 @@
 const {usersMockData} = require('../../__mocks__')
-const {getUser, getUsers, registerUser, deleteUser} = require('../../../src/controllers')
+const {getUser, getUsers, registerUser, deleteUser, login} = require('../../../src/controllers')
 
 const {mockRequest, mockResponse} = require('./util/interceptor')
 
@@ -138,5 +138,47 @@ describe('Test user controllers', () => {
     expect(response.status).toHaveBeenCalledWith(404)
 
     expect(requestDeleteUser.message).toBe('User not found')
+  })
+
+  test('Should login user with correct credentials', async () => {
+    request.body = {
+      email: 'nico123@gmail.com',
+      password: '123'
+    }
+    response.json = jest.fn(() => ({
+      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+    }))
+
+    const requestUserLogin = await login(request, response)
+
+    expect(response.json).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledWith(200)
+  })
+
+  test('Should return error login with not correct email', async () => {
+    request.body = {
+      email: 'nico1234@gmail.com',
+      password: '123'
+    }
+
+    const requestUserLogin = await login(request, response)
+
+    expect(response.json).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledWith(400)
+  })
+
+  test('Should return error login with not correct password', async () => {
+    request.body = {
+      email: 'nico123@gmail.com',
+      password: '12345678'
+    }
+
+    const requestUserLogin = await login(request, response)
+
+    expect(response.json).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledWith(400)
   })
 })
