@@ -1,5 +1,5 @@
 const {usersMockData} = require('../../__mocks__')
-const {getUser, getUsers, registerUser} = require('../../../src/controllers')
+const {getUser, getUsers, registerUser, deleteUser} = require('../../../src/controllers')
 
 const {mockRequest, mockResponse} = require('./util/interceptor')
 
@@ -58,13 +58,16 @@ describe('Test user controllers', () => {
 
   test('should return user not found', async () => {
     request.params = {
-      id: '11111'
+      id: '11111123123'
     }
 
     response.json = jest.fn(() => ({message: 'User not found'}))
 
     const requestGetUser = await getUser(request, response)
     expect(requestGetUser).toEqual({message: 'User not found'})
+    expect(response.json).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledWith(404)
   })
 
   test('should return error if dont have id params', async () => {
@@ -99,5 +102,41 @@ describe('Test user controllers', () => {
     expect(response.status).toHaveBeenCalledWith(201)
 
     expect(requestRegisterUser).toBe(mockUser)
+  })
+
+  test('Should return error if user exist', async () => {
+    const mockUser = {
+      name: 'Nicolás Camilo',
+      lastname: 'Flores Montenegro',
+      email: 'nico123@gmail.com',
+      password: '12345678'
+    }
+
+    request.body = mockUser
+    response.json = jest.fn(() => ({message: `User with email ${mockUser.email} exist`}))
+
+    const requestRegisterUser = await registerUser(request, response)
+
+    expect(response.json).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledWith(400)
+
+    expect(requestRegisterUser.message).toBe(`User with email nico123@gmail.com exist`)
+  })
+
+  test('Should return user not found when try to delete one user', async () => {
+    request.params = {
+      id: '1111'
+    }
+
+    response.json = jest.fn(() => ({message: 'User not found'}))
+
+    const requestDeleteUser = await deleteUser(request, response)
+
+    expect(response.json).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledWith(404)
+
+    expect(requestDeleteUser.message).toBe('User not found')
   })
 })

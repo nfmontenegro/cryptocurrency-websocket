@@ -9,7 +9,7 @@ const registerUser = async (req, res) => {
     const [hashedPassword, hadUser] = await Promise.all([hash(password, 10), req.prisma.user({email})])
 
     if (hadUser && hadUser.email === email) {
-      res.status(400).json({message: `User with email ${email} exist`})
+      return res.status(400).json({message: `User with email ${email} exist`})
     }
 
     const user = await req.prisma.createUser({...req.body, password: hashedPassword})
@@ -39,7 +39,6 @@ const getUser = async (req, res) => {
     }
 
     const user = await req.prisma.user({id})
-
     if (user) {
       return res.status(200).json(user)
     } else {
@@ -66,6 +65,7 @@ const deleteUser = async (req, res) => {
       return res.status(404).json({message: 'User not found'})
     }
   } catch (err) {
+    console.log(err)
     return res.status(500).json({message: err.message})
   }
 }
