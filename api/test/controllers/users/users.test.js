@@ -104,7 +104,7 @@ describe('Test user controllers', () => {
     expect(requestRegisterUser).toBe(mockUser)
   })
 
-  test('Should return error if user exist', async () => {
+  test('should return error if user exist', async () => {
     const mockUser = {
       name: 'Nicolás Camilo',
       lastname: 'Flores Montenegro',
@@ -124,7 +124,7 @@ describe('Test user controllers', () => {
     expect(requestRegisterUser.message).toBe(`User with email nico123@gmail.com exist`)
   })
 
-  test('Should return user not found when try to delete one user', async () => {
+  test('should return user not found when try to delete one user', async () => {
     request.params = {
       id: '1111'
     }
@@ -140,7 +140,7 @@ describe('Test user controllers', () => {
     expect(requestDeleteUser.message).toBe('User not found')
   })
 
-  test('Should login user with correct credentials', async () => {
+  test('should login user with correct credentials', async () => {
     request.body = {
       email: 'nico123@gmail.com',
       password: '123'
@@ -156,7 +156,7 @@ describe('Test user controllers', () => {
     expect(response.status).toHaveBeenCalledWith(200)
   })
 
-  test('Should return error login with not correct email', async () => {
+  test('should return error login with not correct email', async () => {
     request.body = {
       email: 'nico1234@gmail.com',
       password: '123'
@@ -169,7 +169,7 @@ describe('Test user controllers', () => {
     expect(response.status).toHaveBeenCalledWith(400)
   })
 
-  test('Should return error login with not correct password', async () => {
+  test('should return error login with not correct password', async () => {
     request.body = {
       email: 'nico123@gmail.com',
       password: '12345678'
