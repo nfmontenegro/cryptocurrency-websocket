@@ -13,4 +13,11 @@ const registerUser = data =>
     })
     .catch(err => err.response)
 
-export {registerUser}
+const loginUser = async data =>
+  await API({
+    url: '/login',
+    method: 'POST',
+    data
+  })
+
+export {registerUser, loginUser}

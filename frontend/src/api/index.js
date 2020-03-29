@@ -1,3 +1,3 @@
-import {registerUser} from './user'
+import {registerUser, loginUser} from './user'
 
-export {registerUser}
+export {registerUser, loginUser}

@@ -1,6 +1,7 @@
 const {sign} = require('jsonwebtoken')
 const {hash, compare} = require('bcryptjs')
 
+const {SECRET} = require('../config')
 const {prisma} = require('../../generated/prisma-client')
 
 const registerUser = async (req, res) => {
@@ -25,7 +26,6 @@ const getUsers = async (req, res) => {
     const users = await req.prisma.users()
     return res.status(200).json(users)
   } catch (err) {
-    console.log(err)
     res.status(500).json({message: err.message})
   }
 }
@@ -65,7 +65,6 @@ const deleteUser = async (req, res) => {
       return res.status(404).json({message: 'User not found'})
     }
   } catch (err) {
-    console.log(err)
     return res.status(500).json({message: err.message})
   }
 }
@@ -85,7 +84,7 @@ const login = async (req, res) => {
       return res.status(400).json({message: 'Invalid password'})
     }
 
-    const token = sign({userId: user.id}, 'psssshhhhtt! secret')
+    const token = sign({userId: user.id}, SECRET)
 
     return res.status(200).json({data: token})
   } catch (err) {

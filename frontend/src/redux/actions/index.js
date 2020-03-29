@@ -1,3 +1,3 @@
-import {registerUserAction} from './user'
+import {registerUserAction, loginUserAction} from './user'
 
-export {registerUserAction}
+export {registerUserAction, loginUserAction}

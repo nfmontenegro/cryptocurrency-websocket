@@ -1,6 +1,7 @@
 const INITIAL_STATE = {
   loading: false,
-  data: null
+  data: null,
+  isAuthenticaded: false
 }
 
 export default function(state = INITIAL_STATE, action) {
@@ -10,6 +11,13 @@ export default function(state = INITIAL_STATE, action) {
       return {
         ...state,
         loading: true
+      }
+    case 'LOGIN_SUCCESS':
+      return {
+        ...state,
+        data: payload,
+        loading: false,
+        isAuthenticaded: true
       }
     case 'CREATE_USER':
       return {

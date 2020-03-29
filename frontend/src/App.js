@@ -1,7 +1,7 @@
 import React from 'react'
 import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom'
 
-import {Signup, Signin, Welcome} from './views'
+import {Signup, Signin, Welcome, Home} from './views'
 
 function App() {
   return (
@@ -17,6 +17,9 @@ function App() {
           </Route>
           <Route path="/welcome">
             <Welcome />
+          </Route>
+          <Route path="/home">
+            <Home />
           </Route>
         </Switch>
       </div>

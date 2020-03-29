@@ -4,6 +4,7 @@ import {useDispatch} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 import * as Yup from 'yup'
 
+import {loginUserAction} from '../../../redux/actions'
 import {Button, Input, Notification} from '../../../components'
 
 const INITIAL_VALUES = {
@@ -29,7 +30,9 @@ const Login = () => {
   const formik = useFormik({
     initialValues: INITIAL_VALUES,
     validationSchema: SignupSchema,
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: async (values, {resetForm}) => {
+      const {payload} = await dispatch(loginUserAction(values))
+      history.push('/home')
       // dispatch(registerUserAction(values))
       //   .then(response => {
       //     const {id, email} = response.payload
