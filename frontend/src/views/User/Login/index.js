@@ -31,19 +31,15 @@ const Login = () => {
     initialValues: INITIAL_VALUES,
     validationSchema: SignupSchema,
     onSubmit: async (values, {resetForm}) => {
-      const {payload} = await dispatch(loginUserAction(values))
-      history.push('/home')
-      // dispatch(registerUserAction(values))
-      //   .then(response => {
-      //     const {id, email} = response.payload
-      //     // resetForm()
-      //     history.push(`/welcome?id=${id}&user=${email}`)
-      //   })
-      //   .catch(error => {
-      //     setSubmitting(false)
-      //     setNotification({show: true, message: error.response.data.message})
-      //     setTimeout(() => setNotification(false), 2500)
-      //   })
+      const {type, payload} = await dispatch(loginUserAction(values))
+      if (type === LOGIN_SUCCESS) {
+        history.push('/home')
+      } else {
+        //show message
+        setSubmitting(false)
+        setNotification({show: true, message: payload.message})
+        setTimeout(() => setNotification(false), 2500)
+      }
     }
   })
 
