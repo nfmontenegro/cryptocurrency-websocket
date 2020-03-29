@@ -1,11 +1,12 @@
 import React, {useState} from 'react'
 import {useFormik} from 'formik'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 import * as Yup from 'yup'
 
 import {loginUserAction} from '../../../redux/actions'
 import {Button, Input, Notification} from '../../../components'
+import {useEffect} from 'react'
 
 const INITIAL_VALUES = {
   email: '',
@@ -24,23 +25,26 @@ const SignupSchema = Yup.object().shape({
 
 const Login = () => {
   const dispatch = useDispatch()
+  const userState = useSelector(state => state.user)
   const [notification, setNotification] = useState({show: false, message: null})
   const history = useHistory()
+
+  console.log(userState.data)
+  useEffect(() => {
+    if (userState.isAuthenticaded) {
+      history.push('/home')
+    } else {
+      setSubmitting(false)
+      setNotification({show: true, message: userState.message})
+      //fake async
+      setTimeout(() => setNotification(false), 2500)
+    }
+  }, [userState.isAuthenticaded])
 
   const formik = useFormik({
     initialValues: INITIAL_VALUES,
     validationSchema: SignupSchema,
-    onSubmit: async (values, {resetForm}) => {
-      const {type, payload} = await dispatch(loginUserAction(values))
-      if (type === LOGIN_SUCCESS) {
-        history.push('/home')
-      } else {
-        //show message
-        setSubmitting(false)
-        setNotification({show: true, message: payload.message})
-        setTimeout(() => setNotification(false), 2500)
-      }
-    }
+    onSubmit: async values => await dispatch(loginUserAction(values))
   })
 
   const {handleSubmit, handleChange, values, isSubmitting, setSubmitting} = formik

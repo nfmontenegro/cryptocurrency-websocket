@@ -29,11 +29,10 @@ const Signup = () => {
   const formik = useFormik({
     initialValues: INITIAL_VALUES,
     validationSchema: SignupSchema,
-    onSubmit: (values, {resetForm}) => {
+    onSubmit: values => {
       dispatch(registerUserAction(values))
         .then(response => {
           const {id, email} = response.payload
-          // resetForm()
           history.push(`/welcome?id=${id}&user=${email}`)
         })
         .catch(error => {

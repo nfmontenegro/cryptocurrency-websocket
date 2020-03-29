@@ -1,10 +1,5 @@
-import {CREATE_USER, LOGIN_SUCCESS} from '../constants'
+import {CREATE_USER, LOGIN_SUCCESS, LOGIN_FAILURE} from '../constants'
 import {registerUser, loginUser} from '../../api'
-
-const hasSomeError = serverResponse => {
-  const statusCode = [400, 401]
-  return statusCode.includes(serverResponse.status) ? true : false
-}
 
 const registerUserAction = formValues => {
   return dispatch => {
@@ -19,26 +14,27 @@ const registerUserAction = formValues => {
   }
 }
 
-const failureLogin = error => {
-  localStorage.removeItem('token')
+const failureLogin = errorMessage => {
   return {
     type: LOGIN_FAILURE,
-    payload: error
+    payload: errorMessage
   }
 }
 
 const successLogin = data => {
-  localStorage.setItem('token')
+  localStorage.setItem('token', data)
   return {
     type: LOGIN_SUCCESS,
     payload: data
   }
 }
 
-const loginUserAction = formValues => {
-  return async dispatch => {
+const loginUserAction = formValues => async dispatch => {
+  try {
     const response = await loginUser(formValues)
-    return hasSomeError(response) ? dispatch(failureLogin(response.data)) : dispatch(successLogin(response.data))
+    return dispatch(successLogin(response.data))
+  } catch (err) {
+    return dispatch(failureLogin(err.response.data.message))
   }
 }
 
