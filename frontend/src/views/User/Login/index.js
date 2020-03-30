@@ -29,18 +29,6 @@ const Login = () => {
   const [notification, setNotification] = useState({show: false, message: null})
   const history = useHistory()
 
-  console.log(userState.data)
-  useEffect(() => {
-    if (userState.isAuthenticaded) {
-      history.push('/home')
-    } else {
-      setSubmitting(false)
-      setNotification({show: true, message: userState.message})
-      //fake async
-      setTimeout(() => setNotification(false), 2500)
-    }
-  }, [userState.isAuthenticaded])
-
   const formik = useFormik({
     initialValues: INITIAL_VALUES,
     validationSchema: SignupSchema,
@@ -49,15 +37,34 @@ const Login = () => {
 
   const {handleSubmit, handleChange, values, isSubmitting, setSubmitting} = formik
 
+  useEffect(() => {
+    const {isAuthenticaded, data} = userState
+    if (isAuthenticaded) {
+      history.push('/home')
+    }
+
+    if (data && !isAuthenticaded) {
+      setSubmitting(false)
+      setNotification({show: true, message: data})
+      //fake async
+      setTimeout(() => setNotification(false), 2500)
+    }
+  }, [userState, history, setSubmitting])
+
   return (
     <React.Fragment>
       {notification.show && <Notification message={notification.message} />}
-      <div className="grid grid-cols-8">
-        <div className="col-start-4 col-span-6">
-          <form className=" max-w-sm" onSubmit={handleSubmit}>
+      <div className="min-h-full flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full">
+          <div>
+            <h2 className="mt-1 text-center text-3xl leading-9 font-extrabold text-gray-900">Sign in to your account</h2>
+          </div>
+          <form className=" max-w-sm mt-8" onSubmit={handleSubmit}>
             <Input type="email" label="Email" name="email" onChange={handleChange} value={values.email} />
             <Input type="password" label="Password" name="password" onChange={handleChange} value={values.password} />
-            <Button value="Sign in" isSubmitting={isSubmitting} />
+            <div className="mt-6">
+              <Button value="Sign in" isSubmitting={isSubmitting} />
+            </div>
           </form>
         </div>
       </div>

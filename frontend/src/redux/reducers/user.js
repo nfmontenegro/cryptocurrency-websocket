@@ -1,3 +1,5 @@
+import {CREATE_USER, LOGIN_SUCCESS, LOGIN_FAILURE, LOADING} from '../constants'
+
 const INITIAL_STATE = {
   data: null,
   loading: false,
@@ -7,26 +9,26 @@ const INITIAL_STATE = {
 export default function(state = INITIAL_STATE, action) {
   const {type, payload} = action
   switch (type) {
-    case 'LOADING':
+    case LOADING:
       return {
         ...state,
         loading: true
       }
-    case 'LOGIN_SUCCESS':
+    case LOGIN_SUCCESS:
       return {
         ...state,
         data: payload,
         loading: false,
         isAuthenticaded: true
       }
-    case 'LOGIN_FAILURE':
+    case LOGIN_FAILURE:
       return {
         ...state,
         data: payload,
         loading: false,
         isAuthenticaded: false
       }
-    case 'CREATE_USER':
+    case CREATE_USER:
       return {
         ...state,
         loading: false,

@@ -48,9 +48,12 @@ const Signup = () => {
   return (
     <React.Fragment>
       {notification.show && <Notification message={notification.message} />}
-      <div className="grid grid-cols-8">
-        <div className="col-start-4 col-span-6">
-          <form className=" max-w-sm" onSubmit={handleSubmit}>
+      <div className="min-h-full flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full">
+          <div>
+            <h2 className="mt-1 text-center text-3xl leading-9 font-extrabold text-gray-900">Sign up into our APP</h2>
+          </div>
+          <form className=" max-w-sm mt-8" onSubmit={handleSubmit}>
             <Input type="email" label="Email" name="email" onChange={handleChange} value={values.email} />
             <Input type="password" label="Password" name="password" onChange={handleChange} value={values.password} />
             <Button value="Sign up" isSubmitting={isSubmitting} />
