@@ -6,6 +6,7 @@ import * as Yup from 'yup'
 
 import {registerUserAction} from '../../../redux/actions'
 import {Button, Input, Notification} from '../../../components'
+import {useEffect} from 'react'
 
 const INITIAL_VALUES = {
   email: '',
@@ -24,26 +25,36 @@ const SignupSchema = Yup.object().shape({
 
 const Signup = () => {
   const dispatch = useDispatch()
+  const userState = useSelector(state => state.user)
   const [notification, setNotification] = useState({show: false, message: null})
   const history = useHistory()
   const formik = useFormik({
     initialValues: INITIAL_VALUES,
     validationSchema: SignupSchema,
-    onSubmit: values => {
-      dispatch(registerUserAction(values))
-        .then(response => {
-          const {id, email} = response.payload
-          history.push(`/welcome?id=${id}&user=${email}`)
-        })
-        .catch(error => {
-          setSubmitting(false)
-          setNotification({show: true, message: error.response.data.message})
-          setTimeout(() => setNotification(false), 2500)
-        })
-    }
+    onSubmit: async values => await dispatch(registerUserAction(values))
+
+    // onSubmit: values => {
+    //   dispatch(registerUserAction(values))
+    //     .then(response => {
+    //       const {id, email} = response.payload
+    //       history.push(`/welcome?id=${id}&user=${email}`)
+    //     })
+    //     .catch(error => {
+    //       setSubmitting(false)
+    //       setNotification({show: true, message: error.response.data.message})
+    //       setTimeout(() => setNotification(false), 2500)
+    //     })
+    // }
   })
 
   const {handleSubmit, handleChange, values, isSubmitting, setSubmitting} = formik
+
+  useEffect(() => {
+    const {
+      data: {id, email}
+    } = userState
+    history.push(`/welcome?id=${id}&user=${email}`)
+  }, [userState, history])
 
   return (
     <React.Fragment>
