@@ -1,17 +1,11 @@
 import {API} from '../utils'
 
-const registerUser = data =>
-  API({
+const registerUser = async data =>
+  await API({
     url: '/users',
     method: 'POST',
     data
   })
-    .then(response => {
-      //TODO: check if user exist
-
-      return response.data
-    })
-    .catch(err => err.response)
 
 const loginUser = async data =>
   await API({

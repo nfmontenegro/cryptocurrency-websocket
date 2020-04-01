@@ -1,4 +1,4 @@
-import {CREATE_USER, LOGIN_SUCCESS, LOGIN_FAILURE, LOADING} from '../constants'
+import {CREATE_USER, LOGIN_SUCCESS, ERROR, LOADING} from '../constants'
 
 const INITIAL_STATE = {
   data: null,
@@ -21,7 +21,7 @@ export default function(state = INITIAL_STATE, action) {
         loading: false,
         isAuthenticaded: true
       }
-    case LOGIN_FAILURE:
+    case ERROR:
       return {
         ...state,
         data: payload,
