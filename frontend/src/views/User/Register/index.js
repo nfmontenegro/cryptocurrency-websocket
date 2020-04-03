@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {useFormik} from 'formik'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 import * as Yup from 'yup'
 
@@ -32,29 +32,22 @@ const Signup = () => {
     initialValues: INITIAL_VALUES,
     validationSchema: SignupSchema,
     onSubmit: async values => await dispatch(registerUserAction(values))
-
-    // onSubmit: values => {
-    //   dispatch(registerUserAction(values))
-    //     .then(response => {
-    //       const {id, email} = response.payload
-    //       history.push(`/welcome?id=${id}&user=${email}`)
-    //     })
-    //     .catch(error => {
-    //       setSubmitting(false)
-    //       setNotification({show: true, message: error.response.data.message})
-    //       setTimeout(() => setNotification(false), 2500)
-    //     })
-    // }
   })
 
   const {handleSubmit, handleChange, values, isSubmitting, setSubmitting} = formik
 
   useEffect(() => {
-    const {
-      data: {id, email}
-    } = userState
-    history.push(`/welcome?id=${id}&user=${email}`)
-  }, [userState, history])
+    const {data, error} = userState
+    if (error) {
+      setNotification({show: true, message: userState.data})
+      setTimeout(() => setNotification(false), 2500)
+    }
+
+    if (data && !error) {
+      const {id, email} = data
+      history.push(`/welcome?id=${id}&user=${email}`)
+    }
+  }, [userState.error, setSubmitting, history])
 
   return (
     <React.Fragment>

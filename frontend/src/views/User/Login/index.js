@@ -44,7 +44,6 @@ const Login = () => {
     }
 
     if (data && !isAuthenticaded) {
-      setSubmitting(false)
       setNotification({show: true, message: data})
       //fake async
       setTimeout(() => setNotification(false), 2500)

@@ -2,6 +2,7 @@ import {CREATE_USER, LOGIN_SUCCESS, ERROR, LOADING} from '../constants'
 
 const INITIAL_STATE = {
   data: null,
+  error: false,
   loading: false,
   isAuthenticaded: false
 }
@@ -25,6 +26,7 @@ export default function(state = INITIAL_STATE, action) {
       return {
         ...state,
         data: payload,
+        error: true,
         loading: false,
         isAuthenticaded: false
       }
