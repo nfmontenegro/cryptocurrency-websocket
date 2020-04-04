@@ -16,6 +16,7 @@ const registerUser = async (req, res) => {
     const user = await req.prisma.createUser({...req.body, password: hashedPassword})
     return res.status(201).json(user)
   } catch (err) {
+    console.log(err)
     return res.status(500).json({message: err.message})
   }
 }
@@ -84,9 +85,9 @@ const login = async (req, res) => {
       return res.status(400).json({message: 'Invalid password'})
     }
 
-    const token = sign({userId: user.id}, SECRET)
+    const token = sign({userId: user.id}, SECRET, {expiresIn: '5m'})
 
-    return res.status(200).json({data: token})
+    return res.status(200).json(token)
   } catch (err) {
     return res.status(500).json({message: err.message})
   }

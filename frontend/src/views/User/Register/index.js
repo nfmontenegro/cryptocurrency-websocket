@@ -10,7 +10,9 @@ import {useEffect} from 'react'
 
 const INITIAL_VALUES = {
   email: '',
-  password: ''
+  password: '',
+  name: '',
+  lastname: ''
 }
 
 const SignupSchema = Yup.object().shape({
@@ -47,7 +49,7 @@ const Signup = () => {
       const {id, email} = data
       history.push(`/welcome?id=${id}&user=${email}`)
     }
-  }, [userState.error, setSubmitting, history])
+  }, [userState, setSubmitting, history])
 
   return (
     <React.Fragment>
@@ -60,6 +62,8 @@ const Signup = () => {
           <form className=" max-w-sm mt-8" onSubmit={handleSubmit}>
             <Input type="email" label="Email" name="email" onChange={handleChange} value={values.email} />
             <Input type="password" label="Password" name="password" onChange={handleChange} value={values.password} />
+            <Input type="text" label="Name" name="name" onChange={handleChange} value={values.name} />
+            <Input type="text" label="Lastname" name="lastname" onChange={handleChange} value={values.lastname} />
             <Button value="Sign up" isSubmitting={isSubmitting} />
           </form>
         </div>

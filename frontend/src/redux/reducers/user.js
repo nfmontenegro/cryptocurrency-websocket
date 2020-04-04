@@ -20,6 +20,7 @@ export default function(state = INITIAL_STATE, action) {
         ...state,
         data: payload,
         loading: false,
+        error: false,
         isAuthenticaded: true
       }
     case ERROR:
@@ -34,7 +35,8 @@ export default function(state = INITIAL_STATE, action) {
       return {
         ...state,
         loading: false,
-        data: payload
+        data: payload,
+        error: false
       }
     default:
       return state
