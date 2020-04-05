@@ -87,10 +87,16 @@ const login = async (req, res) => {
 
     const token = sign({userId: user.id}, SECRET, {expiresIn: '5m'})
 
-    return res.status(200).json(token)
+    return res.status(200).json({token, user})
   } catch (err) {
     return res.status(500).json({message: err.message})
   }
+}
+
+const profile = async (req, res) => {
+  const {userId: id} = req.token
+  const user = await req.prisma.user({id})
+  res.json(user)
 }
 
 module.exports = {
@@ -98,5 +104,6 @@ module.exports = {
   getUsers,
   getUser,
   deleteUser,
-  login
+  login,
+  profile
 }

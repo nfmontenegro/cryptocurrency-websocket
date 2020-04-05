@@ -12,28 +12,23 @@ const INITIAL_VALUES = {
   email: '',
   password: '',
   name: '',
-  lastname: ''
+  lastname: '',
 }
 
 const SignupSchema = Yup.object().shape({
-  password: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
-  email: Yup.string()
-    .email('Invalid email')
-    .required('Required')
+  password: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
+  email: Yup.string().email('Invalid email').required('Required'),
 })
 
 const Signup = () => {
   const dispatch = useDispatch()
-  const userState = useSelector(state => state.user)
+  const userState = useSelector((state) => state.user)
   const [notification, setNotification] = useState({show: false, message: null})
   const history = useHistory()
   const formik = useFormik({
     initialValues: INITIAL_VALUES,
     validationSchema: SignupSchema,
-    onSubmit: async values => await dispatch(registerUserAction(values))
+    onSubmit: async (values) => await dispatch(registerUserAction(values)),
   })
 
   const {handleSubmit, handleChange, values, isSubmitting, setSubmitting} = formik

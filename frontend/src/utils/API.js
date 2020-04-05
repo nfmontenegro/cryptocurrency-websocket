@@ -1,27 +1,25 @@
 import axios from 'axios'
 import store from '../redux/store'
 
-const getTokenStorage = () => {
-  const token = JSON.stringify(localStorage.getItem('token'))
-  return token ? token : null
-}
-
 const API = axios.create({
   baseURL: 'http://localhost:3000/api/v1',
   responseType: 'json',
-  headers: {
-    Authorization: getTokenStorage()
-  }
 })
 
-//Add expiration token
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`
+  }
+  return token
+})
+
 axios.interceptors.response.use(
-  response => response,
-  error => {
-    console.log('interceptor error', error)
+  (response) => response,
+  (error) => {
     store.dispatch({
       type: 'ERROR',
-      payload: error
+      payload: error,
     })
     return Promise.reject(error)
   }

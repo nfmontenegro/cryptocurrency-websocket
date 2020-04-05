@@ -10,17 +10,12 @@ import {useEffect} from 'react'
 
 const INITIAL_VALUES = {
   email: '',
-  password: ''
+  password: '',
 }
 
 const SignupSchema = Yup.object().shape({
-  password: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
-  email: Yup.string()
-    .email('Invalid email')
-    .required('Required')
+  password: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
+  email: Yup.string().email('Invalid email').required('Required'),
 })
 
 const Login = () => {
@@ -32,18 +27,18 @@ const Login = () => {
   const formik = useFormik({
     initialValues: INITIAL_VALUES,
     validationSchema: SignupSchema,
-    onSubmit: async values => await dispatch(loginUserAction(values))
+    onSubmit: async values => await dispatch(loginUserAction(values)),
   })
 
   const {handleSubmit, handleChange, values, isSubmitting, setSubmitting} = formik
 
   useEffect(() => {
-    const {isAuthenticaded, data} = userState
-    if (isAuthenticaded) {
+    const {isAuthenticated, data} = userState
+    if (isAuthenticated) {
       history.push('/home')
     }
 
-    if (data && !isAuthenticaded) {
+    if (data && !isAuthenticated) {
       setNotification({show: true, message: data})
       //fake async
       setTimeout(() => setNotification(false), 2500)

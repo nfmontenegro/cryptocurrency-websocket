@@ -14,4 +14,10 @@ const loginUser = async data =>
     data
   })
 
+const getProfile = async () =>
+  await API({
+    url: '/user/profile',
+    method: 'GET'
+  })
+
 export {registerUser, loginUser}

@@ -1,3 +1,3 @@
-const {registerUser, getUser, getUsers, deleteUser, login} = require('./user')
+const {registerUser, getUser, getUsers, deleteUser, login, profile} = require('./user')
 
-module.exports = {registerUser, getUser, getUsers, deleteUser, login}
+module.exports = {registerUser, getUser, getUsers, deleteUser, login, profile}

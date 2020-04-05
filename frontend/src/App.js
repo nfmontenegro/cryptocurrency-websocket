@@ -6,8 +6,8 @@ import {Signup, Signin, Welcome, Home, Navbar} from './views'
 function App() {
   return (
     <>
-      <Navbar />
       <Router>
+        <Navbar />
         <div>
           <Switch>
             <Route exact path="/" render={() => <Redirect to="/signup" />} />

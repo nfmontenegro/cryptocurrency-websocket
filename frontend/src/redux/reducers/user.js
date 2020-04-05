@@ -4,16 +4,16 @@ const INITIAL_STATE = {
   data: null,
   error: false,
   loading: false,
-  isAuthenticaded: false
+  isAuthenticated: false,
 }
 
-export default function(state = INITIAL_STATE, action) {
+export default function (state = INITIAL_STATE, action) {
   const {type, payload} = action
   switch (type) {
     case LOADING:
       return {
         ...state,
-        loading: true
+        loading: true,
       }
     case LOGIN_SUCCESS:
       return {
@@ -21,7 +21,7 @@ export default function(state = INITIAL_STATE, action) {
         data: payload,
         loading: false,
         error: false,
-        isAuthenticaded: true
+        isAuthenticated: true,
       }
     case ERROR:
       return {
@@ -29,14 +29,14 @@ export default function(state = INITIAL_STATE, action) {
         data: payload,
         error: true,
         loading: false,
-        isAuthenticaded: false
+        isAuthenticated: false,
       }
     case CREATE_USER:
       return {
         ...state,
         loading: false,
         data: payload,
-        error: false
+        error: false,
       }
     default:
       return state

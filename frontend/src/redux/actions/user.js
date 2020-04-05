@@ -25,7 +25,7 @@ const registerUserAction = formValues => async dispatch => {
 const loginUserAction = formValues => async dispatch => {
   try {
     const response = await loginUser(formValues)
-    localStorage.setItem('token', response.data)
+    localStorage.setItem('token', response.data.token)
     return dispatch(successRequest(response.data, LOGIN_SUCCESS))
   } catch (err) {
     return dispatch(failureRequest(err.response.data.message))
