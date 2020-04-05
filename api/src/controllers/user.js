@@ -16,8 +16,7 @@ const registerUser = async (req, res) => {
     const user = await req.prisma.createUser({...req.body, password: hashedPassword})
     return res.status(201).json(user)
   } catch (err) {
-    console.log(err)
-    return res.status(500).json({message: err.message})
+    next(err)
   }
 }
 
@@ -27,7 +26,7 @@ const getUsers = async (req, res) => {
     const users = await req.prisma.users()
     return res.status(200).json(users)
   } catch (err) {
-    res.status(500).json({message: err.message})
+    next(err)
   }
 }
 
@@ -46,7 +45,7 @@ const getUser = async (req, res) => {
       return res.status(404).json({message: 'User not found'})
     }
   } catch (err) {
-    res.status(500).json({message: err.message})
+    next(err)
   }
 }
 
@@ -66,7 +65,7 @@ const deleteUser = async (req, res) => {
       return res.status(404).json({message: 'User not found'})
     }
   } catch (err) {
-    return res.status(500).json({message: err.message})
+    next(err)
   }
 }
 
@@ -89,7 +88,7 @@ const login = async (req, res) => {
 
     return res.status(200).json({token, user})
   } catch (err) {
-    return res.status(500).json({message: err.message})
+    next(err)
   }
 }
 

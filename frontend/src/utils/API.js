@@ -1,12 +1,12 @@
 import axios from 'axios'
-import store from '../redux/store'
+import {store} from '../redux/store'
 
 const API = axios.create({
   baseURL: 'http://localhost:3000/api/v1',
-  responseType: 'json',
+  responseType: 'json'
 })
 
-axios.interceptors.request.use((config) => {
+axios.interceptors.request.use(config => {
   const token = localStorage.getItem('token')
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`
@@ -15,11 +15,11 @@ axios.interceptors.request.use((config) => {
 })
 
 axios.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  response => response,
+  error => {
     store.dispatch({
       type: 'ERROR',
-      payload: error,
+      payload: error
     })
     return Promise.reject(error)
   }

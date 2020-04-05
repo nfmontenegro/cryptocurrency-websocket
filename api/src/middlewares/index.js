@@ -20,7 +20,7 @@ const verifyToken = (req, res, next) => {
 
   if (token) {
     verifyJWT(token, SECRET)
-      .then((verifiedToken) => {
+      .then(verifiedToken => {
         if (!verifiedToken) {
           res.status(401).json({message: 'Token is not valid'})
         } else {
@@ -28,17 +28,17 @@ const verifyToken = (req, res, next) => {
           next()
         }
       })
-      .catch((err) => {
+      .catch(err => {
         const message = 'Invalid token'
         res.status(401).json({message})
       })
   } else {
     res.status(403).json({
-      message: 'Auth token is not supplied',
+      message: 'Auth token is not supplied'
     })
   }
 }
 
 module.exports = {
-  verifyToken,
+  verifyToken
 }

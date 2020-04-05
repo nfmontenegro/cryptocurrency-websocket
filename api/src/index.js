@@ -20,6 +20,13 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use((err, req, res, next) => {
+  if (err) {
+    res.status(500).json({message: err.message})
+  }
+  next()
+})
+
 app.use('/api/v1', userRouter)
 
 app.get('/', (req, res) => {

@@ -1,6 +1,16 @@
 import {createStore, applyMiddleware, compose} from 'redux'
+import {persistStore, persistReducer} from 'redux-persist'
 import thunk from 'redux-thunk'
+import storage from 'redux-persist/lib/storage'
 import reducer from '../reducers'
+
+const persistConfig = {
+  key: 'user',
+  storage,
+  whitelist: ['user']
+}
+
+const persistedReducer = persistReducer(persistConfig, reducer)
 
 const middleware = [thunk]
 
@@ -9,6 +19,7 @@ const composeEnhancers =
 
 const enhancer = composeEnhancers(applyMiddleware(...middleware))
 
-const store = createStore(reducer, enhancer)
+const store = createStore(persistedReducer, enhancer)
+const persistor = persistStore(store)
 
-export default store
+export {store, persistor}
