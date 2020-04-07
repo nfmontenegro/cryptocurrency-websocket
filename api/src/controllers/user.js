@@ -92,10 +92,14 @@ const login = async (req, res) => {
   }
 }
 
-const profile = async (req, res) => {
+const userProfile = async (req, res) => {
   const {userId: id} = req.token
-  const user = await req.prisma.user({id})
-  res.json(user)
+  if (id) {
+    const user = await req.prisma.user({id})
+    return res.status(200).json(user)
+  } else {
+    return res.status(404).json({message: 'User not found'})
+  }
 }
 
 module.exports = {
@@ -104,5 +108,5 @@ module.exports = {
   getUser,
   deleteUser,
   login,
-  profile
+  userProfile
 }

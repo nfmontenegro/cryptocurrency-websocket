@@ -1,5 +1,5 @@
 const {usersMockData} = require('../../__mocks__')
-const {getUser, getUsers, registerUser, deleteUser, login} = require('../../../src/controllers')
+const {getUser, getUsers, registerUser, deleteUser, login, userProfile} = require('../../../src/controllers')
 
 const {mockRequest, mockResponse} = require('./util/interceptor')
 
@@ -145,9 +145,6 @@ describe('Test user controllers', () => {
       email: 'nico123@gmail.com',
       password: '123'
     }
-    response.json = jest.fn(() => ({
-      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
-    }))
 
     const requestUserLogin = await login(request, response)
 
@@ -180,5 +177,16 @@ describe('Test user controllers', () => {
     expect(response.json).toHaveBeenCalledTimes(1)
     expect(response.status).toHaveBeenCalledTimes(1)
     expect(response.status).toHaveBeenCalledWith(400)
+  })
+
+  test('should return user not found with id', async () => {
+    request.token = '1233323233333'
+
+    const requestUserProfile = await userProfile(request, response)
+
+    expect(requestUserProfile.message).toBe('User not found')
+    expect(response.json).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledWith(404)
   })
 })
