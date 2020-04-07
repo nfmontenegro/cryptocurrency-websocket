@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {useFormik} from 'formik'
 import {useDispatch, useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
+import {store} from '../../../redux/store'
 import * as Yup from 'yup'
 
 import {loginUserAction} from '../../../redux/actions'
@@ -10,12 +11,12 @@ import {useEffect} from 'react'
 
 const INITIAL_VALUES = {
   email: '',
-  password: '',
+  password: ''
 }
 
 const SignupSchema = Yup.object().shape({
   password: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
-  email: Yup.string().email('Invalid email').required('Required'),
+  email: Yup.string().email('Invalid email').required('Required')
 })
 
 const Login = () => {
@@ -27,23 +28,31 @@ const Login = () => {
   const formik = useFormik({
     initialValues: INITIAL_VALUES,
     validationSchema: SignupSchema,
-    onSubmit: async values => await dispatch(loginUserAction(values)),
+    onSubmit: async values => await dispatch(loginUserAction(values))
   })
 
-  const {handleSubmit, handleChange, values, isSubmitting, setSubmitting} = formik
+  const {handleSubmit, handleChange, values, isSubmitting} = formik
 
   useEffect(() => {
-    const {isAuthenticated, data} = userState
+    //reset state from redux-persist
+    if (userState.error) {
+      store.dispatch({type: 'NOT_PERSIST'})
+    }
+  })
+
+  useEffect(() => {
+    const {isAuthenticated, data, error} = userState
+
     if (isAuthenticated) {
       history.push('/home')
     }
 
-    if (data && !isAuthenticated) {
+    if ((data && !isAuthenticated, error)) {
       setNotification({show: true, message: data})
       //fake async
       setTimeout(() => setNotification(false), 2500)
     }
-  }, [userState, history, setSubmitting])
+  }, [userState, history])
 
   return (
     <React.Fragment>

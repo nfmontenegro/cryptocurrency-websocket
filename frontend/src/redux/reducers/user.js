@@ -2,9 +2,9 @@ import {CREATE_USER, LOGIN_SUCCESS, ERROR, LOADING} from '../constants'
 
 const INITIAL_STATE = {
   data: null,
-  error: false,
   loading: false,
-  isAuthenticated: false,
+  error: false,
+  isAuthenticated: false
 }
 
 export default function (state = INITIAL_STATE, action) {
@@ -13,7 +13,7 @@ export default function (state = INITIAL_STATE, action) {
     case LOADING:
       return {
         ...state,
-        loading: true,
+        loading: true
       }
     case LOGIN_SUCCESS:
       return {
@@ -21,23 +21,30 @@ export default function (state = INITIAL_STATE, action) {
         data: payload,
         loading: false,
         error: false,
-        isAuthenticated: true,
+        isAuthenticated: true
       }
     case ERROR:
       return {
         ...state,
         data: payload,
-        error: true,
         loading: false,
-        isAuthenticated: false,
+        error: true,
+        isAuthenticated: false
       }
     case CREATE_USER:
       return {
         ...state,
         loading: false,
-        data: payload,
         error: false,
+        data: payload
       }
+    case 'NOT_PERSIST': {
+      return {
+        data: null,
+        loading: false,
+        isAuthenticated: false
+      }
+    }
     default:
       return state
   }

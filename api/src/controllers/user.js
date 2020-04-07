@@ -84,7 +84,7 @@ const login = async (req, res) => {
       return res.status(400).json({message: 'Invalid password'})
     }
 
-    const token = sign({userId: user.id}, SECRET, {expiresIn: '5m'})
+    const token = sign({userId: user.id}, SECRET, {expiresIn: '1m'})
 
     return res.status(200).json({token, user})
   } catch (err) {
