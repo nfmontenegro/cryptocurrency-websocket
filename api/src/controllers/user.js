@@ -4,7 +4,7 @@ const {hash, compare} = require('bcryptjs')
 const {SECRET} = require('../config')
 const {prisma} = require('../../generated/prisma-client')
 
-const registerUser = async (req, res) => {
+const registerUser = async (req, res, next) => {
   try {
     const {password, email} = req.body
     const [hashedPassword, hadUser] = await Promise.all([hash(password, 10), req.prisma.user({email})])
@@ -20,7 +20,7 @@ const registerUser = async (req, res) => {
   }
 }
 
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
   const {page, limit} = req.query
   try {
     const users = await req.prisma.users()
@@ -30,7 +30,7 @@ const getUsers = async (req, res) => {
   }
 }
 
-const getUser = async (req, res) => {
+const getUser = async (req, res, next) => {
   try {
     const {id} = req.params
 
@@ -49,7 +49,7 @@ const getUser = async (req, res) => {
   }
 }
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
   try {
     const {id} = req.params
 
@@ -69,7 +69,7 @@ const deleteUser = async (req, res) => {
   }
 }
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
   try {
     const {password, email} = req.body
     const user = await req.prisma.user({email})
@@ -84,7 +84,7 @@ const login = async (req, res) => {
       return res.status(400).json({message: 'Invalid password'})
     }
 
-    const token = sign({userId: user.id}, SECRET, {expiresIn: '1m'})
+    const token = sign({userId: user.id}, SECRET, {expiresIn: '5m'})
 
     return res.status(200).json({token, user})
   } catch (err) {
@@ -92,13 +92,17 @@ const login = async (req, res) => {
   }
 }
 
-const userProfile = async (req, res) => {
-  const {userId: id} = req.token
-  if (id) {
+const userProfile = async (req, res, next) => {
+  try {
+    const {userId: id} = req.token
     const user = await req.prisma.user({id})
-    return res.status(200).json(user)
-  } else {
-    return res.status(404).json({message: 'User not found'})
+    if (user) {
+      return res.status(200).json(user)
+    } else {
+      return res.status(404).json({message: 'User not found'})
+    }
+  } catch (err) {
+    return err
   }
 }
 

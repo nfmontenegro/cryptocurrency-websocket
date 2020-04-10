@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const {SECRET} = require('../config')
 
+// use util promisy to convert callback to async/await
 const verifyJWT = (token, secret) =>
   new Promise((resolve, reject) =>
     jwt.verify(token, SECRET, (err, decoded) => {

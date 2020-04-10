@@ -180,7 +180,11 @@ describe('Test user controllers', () => {
   })
 
   test('should return user not found with id', async () => {
-    request.token = '1233323233333'
+    request.token = {
+      userId: '11122233322AAAABBBCCC',
+      iat: 1586494860,
+      exp: 1586495160
+    }
 
     const requestUserProfile = await userProfile(request, response)
 
@@ -188,5 +192,21 @@ describe('Test user controllers', () => {
     expect(response.json).toHaveBeenCalledTimes(1)
     expect(response.status).toHaveBeenCalledTimes(1)
     expect(response.status).toHaveBeenCalledWith(404)
+  })
+
+  test('should return user profilen', async () => {
+    request.token = {
+      userId: 'ck825lukf009s07498txoai9r',
+      iat: 1586494860,
+      exp: 1586495160
+    }
+
+    response.json = jest.fn(() => usersMockData[0])
+    const requestUserProfile = await userProfile(request, response)
+
+    expect(requestUserProfile).toBe(usersMockData[0])
+    expect(response.json).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledTimes(1)
+    expect(response.status).toHaveBeenCalledWith(200)
   })
 })

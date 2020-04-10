@@ -6,7 +6,7 @@ const {registerUser, getUser, getUsers, deleteUser, login, userProfile} = requir
 const router = express.Router()
 
 router.get('/users/:id', verifyToken, getUser)
-router.get('/userProfile', verifyToken, userProfile)
+router.get('/profile', verifyToken, userProfile)
 router.get('/users', verifyToken, getUsers)
 router.post('/users', registerUser)
 router.delete('/users/:id', verifyToken, deleteUser)
