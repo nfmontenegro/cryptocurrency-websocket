@@ -5,9 +5,7 @@ import {Redirect, withRouter} from 'react-router-dom'
 export default ComposedComponent => {
   class Authentication extends Component {
     componentDidUpdate(nextProps) {
-      console.log(nextProps)
       if (!nextProps.user.isAuthenticated) {
-        console.log('entra aqui')
         nextProps.history.push('/login')
       }
       return null
