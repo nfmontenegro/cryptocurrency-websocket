@@ -4,14 +4,17 @@ import {Redirect, withRouter} from 'react-router-dom'
 
 export default ComposedComponent => {
   class Authentication extends Component {
-    componentWillReceiveProps(nextProps) {
-      if (!this.props.user.isAuthenticated) {
-        this.props.history.push('login')
+    componentDidUpdate(nextProps) {
+      console.log(nextProps)
+      if (!nextProps.user.isAuthenticated) {
+        console.log('entra aqui')
+        nextProps.history.push('/login')
       }
+      return null
     }
 
     render() {
-      return this.props.user.isAuthenticated ? <ComposedComponent {...this.props} /> : <Redirect to="login" />
+      return this.props.user.isAuthenticated ? <ComposedComponent {...this.props} /> : <Redirect to="/login" />
     }
   }
 

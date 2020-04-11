@@ -102,7 +102,7 @@ const userProfile = async (req, res, next) => {
       return res.status(404).json({message: 'User not found'})
     }
   } catch (err) {
-    return err
+    return next(err)
   }
 }
 

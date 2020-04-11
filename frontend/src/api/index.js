@@ -1,3 +1,3 @@
-import {registerUser, loginUser} from './user'
+import requestAPI from './user'
 
-export {registerUser, loginUser}
+export {requestAPI}

@@ -1,4 +1,4 @@
-import {CREATE_USER, LOGIN_SUCCESS, ERROR, LOADING} from '../constants'
+import {CREATE_USER, LOGIN_SUCCESS, ERROR, LOADING, GET_USER_PROFILE} from '../constants'
 
 const INITIAL_STATE = {
   data: null,
@@ -7,6 +7,7 @@ const INITIAL_STATE = {
   isAuthenticated: false
 }
 
+//refact some requests reducers
 export default function (state = INITIAL_STATE, action) {
   const {type, payload} = action
   switch (type) {
@@ -32,6 +33,13 @@ export default function (state = INITIAL_STATE, action) {
         isAuthenticated: false
       }
     case CREATE_USER:
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        data: payload
+      }
+    case GET_USER_PROFILE:
       return {
         ...state,
         loading: false,

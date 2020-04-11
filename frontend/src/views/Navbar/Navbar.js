@@ -1,6 +1,6 @@
 import React from 'react'
 import {useSelector} from 'react-redux'
-import {useHistory} from 'react-router-dom'
+import {useHistory, Redirect} from 'react-router-dom'
 
 const Navbar = () => {
   const history = useHistory()
@@ -39,7 +39,10 @@ const Navbar = () => {
         <div>
           {userState.isAuthenticated ? (
             <>
-              <div className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 mr-4 lg:mt-0">
+              <div
+                className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 mr-4 lg:mt-0"
+                onClick={() => goTo('/user/profile')}
+              >
                 Profile
               </div>
               <div className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">
@@ -50,13 +53,13 @@ const Navbar = () => {
             <>
               <div
                 className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 mr-4 lg:mt-0"
-                onClick={() => goTo('signup')}
+                onClick={() => goTo('/signup')}
               >
                 Signup
               </div>
               <div
                 className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
-                onClick={() => goTo('login')}
+                onClick={() => goTo('/login')}
               >
                 Signin
               </div>

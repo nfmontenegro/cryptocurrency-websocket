@@ -1,23 +1,10 @@
 import {API} from '../utils'
 
-const registerUser = async data =>
+const requestAPI = async (url, method, data) =>
   await API({
-    url: '/users',
-    method: 'POST',
+    url,
+    method,
     data
   })
 
-const loginUser = async data =>
-  await API({
-    url: '/login',
-    method: 'POST',
-    data
-  })
-
-const getProfile = async () =>
-  await API({
-    url: '/user/profile',
-    method: 'GET'
-  })
-
-export {registerUser, loginUser}
+export default requestAPI
