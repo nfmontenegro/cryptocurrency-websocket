@@ -37,4 +37,6 @@ app.get('/', (req, res) => {
   })
 })
 
+const HOST_SERVER = process.env.APP_BASE_URL || 'now.sh'
+
 app.listen(PORT, () => console.log(`Server is running in: ${process.env.APP_BASE_URL}`))
