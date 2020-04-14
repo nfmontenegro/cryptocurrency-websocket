@@ -29,12 +29,12 @@ jobs:
         npm audit fix
         npm test
     - uses: amondnet/now-deployment@v2
-        with:
-          zeit-token: ${{ secrets.ZEIT_TOKEN }} # Required
-          now-args: '--prod' #Optional
-          now-org-id: ${{ secrets.ORG_ID}}  #Required
-          now-project-id: ${{ secrets.PROJECT_ID}} #Required
-          working-directory: ./api
+      with:
+        zeit-token: ${{ secrets.ZEIT_TOKEN }} # Required
+        now-args: '--prod' #Optional
+        now-org-id: ${{ secrets.ORG_ID}}  #Required
+        now-project-id: ${{ secrets.PROJECT_ID}} #Required
+        working-directory: ./api
       env:
         CI: true
         PORT: 3000
