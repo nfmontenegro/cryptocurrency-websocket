@@ -1,7 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
-const http = require('http')
 const bodyParser = require('body-parser')
 const {prisma} = require('../generated/prisma-client')
 
@@ -39,6 +38,5 @@ app.get('/', (req, res) => {
 })
 
 const HOST_SERVER = process.env.APP_BASE_URL || 'now.sh'
-const httpServer = http.createServer(app)
 
-httpServer.listen(3000, () => console.log(`Server is running in: ${HOST_SERVER}`))
+app.listen(8080, () => console.log(`Server is running in: ${HOST_SERVER}`))
