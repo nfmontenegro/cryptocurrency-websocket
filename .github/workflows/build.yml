@@ -36,10 +36,10 @@ jobs:
         project_id: ${{ secrets.PROJECT_ID }}
     - name: Publish app to Google App Engine
       run: |
-        cd api
+        pwd
         gcloud auth activate-service-account ${{ secrets.GCP_SA_EMAIL }}
         gcloud config set project ${{ secrets.PROJECT_ID }}
-        gcloud -q app deploy
+        gcloud -q app deploy app.yaml --promote
 
       env:
         CI: true
