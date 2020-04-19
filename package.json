@@ -11,7 +11,7 @@
     "test:coverage": "jest --coverage",
     "migration": "prisma migrate save --experimental && prisma migrate up --experimental && generate",
     "generate": "prisma generate",
-    "gcp-build": "node node_modules/@prisma/client/scripts/postinstall.js"
+    "gcp-build": "node /srv/node_modules/@prisma/client/scripts/postinstall.js"
   },
   "keywords": [
     "node.js",
