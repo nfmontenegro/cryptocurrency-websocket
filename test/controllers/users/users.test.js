@@ -29,7 +29,7 @@ describe('Test user controllers', () => {
         name: 'Nicolas',
         email: 'nico123@gmail.com',
         lastname: 'Flores',
-        id: 'ck825lukf009s07498txoai9r',
+        id: 1,
         password: '$2a$10$DDP.K5NlbqqiXZ13SZ9.TuAulCjc066UlaLy7QeyklXPnppy67FWK'
       }
     ])
@@ -37,7 +37,7 @@ describe('Test user controllers', () => {
 
   test('should return one user', async () => {
     request.params = {
-      id: 'ck825lukf009s07498txoai9r'
+      id: '1'
     }
 
     response.json = jest.fn(() => usersMockData[0])
@@ -51,7 +51,7 @@ describe('Test user controllers', () => {
       name: 'Nicolas',
       email: 'nico123@gmail.com',
       lastname: 'Flores',
-      id: 'ck825lukf009s07498txoai9r',
+      id: 1,
       password: '$2a$10$DDP.K5NlbqqiXZ13SZ9.TuAulCjc066UlaLy7QeyklXPnppy67FWK'
     })
   })
@@ -194,9 +194,9 @@ describe('Test user controllers', () => {
     expect(response.status).toHaveBeenCalledWith(404)
   })
 
-  test('should return user profilen', async () => {
+  test('should return user profile', async () => {
     request.token = {
-      userId: 'ck825lukf009s07498txoai9r',
+      userId: '1',
       iat: 1586494860,
       exp: 1586495160
     }

@@ -2,7 +2,7 @@ const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const {prisma} = require('../generated/prisma-client')
+const {PrismaClient} = require('@prisma/client')
 
 require('dotenv').config()
 
@@ -10,6 +10,7 @@ const {APP_BASE_URL, PORT} = require('./config')
 const {userRouter} = require('./routes')
 
 const app = express()
+const prisma = new PrismaClient()
 
 app.use(bodyParser.json())
 app.use(cors())

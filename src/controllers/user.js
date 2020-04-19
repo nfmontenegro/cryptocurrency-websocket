@@ -2,18 +2,17 @@ const {sign} = require('jsonwebtoken')
 const {hash, compare} = require('bcryptjs')
 
 const {SECRET} = require('../config')
-const {prisma} = require('../../generated/prisma-client')
 
 const registerUser = async (req, res, next) => {
   try {
     const {password, email} = req.body
-    const [hashedPassword, hadUser] = await Promise.all([hash(password, 10), req.prisma.user({email})])
+    const [hashedPassword, hadUser] = await Promise.all([hash(password, 10), req.prisma.user.findOne({where: {email}})])
 
     if (hadUser && hadUser.email === email) {
       return res.status(400).json({message: `User with email ${email} exist`})
     }
 
-    const user = await req.prisma.createUser({...req.body, password: hashedPassword})
+    const user = await req.prisma.user.create({data: {...req.body, password: hashedPassword}})
     return res.status(201).json(user)
   } catch (err) {
     next(err)
@@ -23,7 +22,7 @@ const registerUser = async (req, res, next) => {
 const getUsers = async (req, res, next) => {
   const {page, limit} = req.query
   try {
-    const users = await req.prisma.users()
+    const users = await req.prisma.user.findMany()
     return res.status(200).json(users)
   } catch (err) {
     next(err)
@@ -32,13 +31,13 @@ const getUsers = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
   try {
-    const {id} = req.params
+    const id = parseInt(req.params.id)
 
     if (!id) {
       return res.status(400).json({message: 'Param resource not found'})
     }
 
-    const user = await req.prisma.user({id})
+    const user = await req.prisma.user.findOne({where: {id}})
     if (user) {
       return res.status(200).json(user)
     } else {
@@ -51,13 +50,13 @@ const getUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
   try {
-    const {id} = req.params
+    const id = parseInt(req.params.id)
 
     if (!id) {
       res.status(400).json({message: 'Param resource not found'})
     }
 
-    const user = await req.prisma.deleteUser({id})
+    const user = await req.prisma.user.delete({where: {id}})
 
     if (user) {
       return res.status(200).json(user)
@@ -72,7 +71,7 @@ const deleteUser = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const {password, email} = req.body
-    const user = await req.prisma.user({email})
+    const user = await req.prisma.user.findOne({where: {email}})
 
     if (!user) {
       return res.status(400).json({message: `No such user found ${email}`})
@@ -94,8 +93,10 @@ const login = async (req, res, next) => {
 
 const userProfile = async (req, res, next) => {
   try {
-    const {userId: id} = req.token
-    const user = await req.prisma.user({id})
+    const id = parseInt(req.token.userId)
+
+    const user = await req.prisma.user.findOne({where: {id}})
+
     if (user) {
       return res.status(200).json(user)
     } else {

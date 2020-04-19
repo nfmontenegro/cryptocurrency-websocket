@@ -7,18 +7,21 @@ module.exports = {
     req.params = jest.fn().mockReturnValue(req)
     req.query = jest.fn().mockReturnValue(req)
     req.prisma = {
-      users: () => usersMockData,
-      user: ({id, email}) => {
-        const user = usersMockData[0]
-        return id === user.id ? user : null || email === user.email ? user : null
-      },
-      createUser: user => {
-        usersMockData.push({id: '12345678', ...user})
-        return user
-      },
-      deleteUser: ({id}) => {
-        const user = usersMockData[0]
-        return id === user.id ? user : null
+      user: {
+        findMany: () => usersMockData,
+        findOne: ({where: {id, email}}) => {
+          const userFake = usersMockData[0]
+          return id === userFake.id ? userFake : null || email === userFake.email ? userFake : null
+        },
+        create: user => {
+          2
+          usersMockData.push({id: '12345678', ...user})
+          return user
+        },
+        delete: ({where: {id}}) => {
+          const user = usersMockData[0]
+          return id === user.id ? user : null
+        }
       }
     }
     return req
