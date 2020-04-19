@@ -27,7 +27,6 @@ jobs:
         npm run build --if-present
         npm audit fix
         npm test
-        npm run migration
     - name: Initialize Google Cloud SDK
       uses: zxyle/publish-gae-action@master
       with:
