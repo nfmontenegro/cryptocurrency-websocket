@@ -9,8 +9,8 @@
     "test": "jest --config ./jest.config.json",
     "test:watch": "npm run test -- --watch",
     "test:coverage": "jest --coverage",
-    "migration": "prisma migrate save --experimental && prisma migrate up --experimental && npm run generate",
-    "generate": "prisma generate"
+    "migration": "./node_modules/.bin/prisma migrate save --experimental && ./node_modules/.bin/prisma migrate up --experimental && npm run generate",
+    "generate": "./node_modules/.bin/prisma generate"
   },
   "keywords": [
     "node.js",
