@@ -1,10 +1,11 @@
 const express = require('express')
 const morgan = require('morgan')
+const dotenv = require('dotenv')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const {PrismaClient} = require('@prisma/client')
 
-require('dotenv').config()
+dotenv.config()
 
 const {APP_BASE_URL, PORT} = require('./config')
 const {userRouter} = require('./routes')
@@ -38,6 +39,4 @@ app.get('/', (req, res) => {
   })
 })
 
-const HOST_SERVER = process.env.APP_BASE_URL || 'now.sh'
-
-app.listen(8080, () => console.log(`Server is running in: ${HOST_SERVER}`))
+app.listen(PORT, () => console.log(`Server is running in: ${process.env.APP_BASE_URL}`))
