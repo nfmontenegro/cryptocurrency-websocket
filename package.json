@@ -10,7 +10,8 @@
     "test:watch": "npm run test -- --watch",
     "test:coverage": "jest --coverage",
     "migration": "prisma migrate save --experimental && prisma migrate up --experimental && generate",
-    "generate": "prisma generate"
+    "generate": "prisma generate",
+    "gcp-build": "prisma generate"
   },
   "keywords": [
     "node.js",

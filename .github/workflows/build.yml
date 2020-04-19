@@ -38,10 +38,6 @@ jobs:
         gcloud auth activate-service-account ${{ secrets.GCP_SA_EMAIL }} --key-file=client-secret.json
         gcloud config set project ${{ secrets.PROJECT_ID }}
         gcloud -q app deploy app.yaml --promote
-    - name: Generate prisma
-      run: |
-        npm install
-        npm run generate
 
       env:
         CI: true
