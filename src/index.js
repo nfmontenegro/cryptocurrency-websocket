@@ -1,9 +1,9 @@
 const express = require('express')
 const morgan = require('morgan')
-const dotenv = require('dotenv')
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const {PrismaClient} = require('../prisma/src/generated/client')
+const dotenv = require('dotenv')
+const {PrismaClient} = require('@prisma/client')
 
 dotenv.config()
 
@@ -39,4 +39,35 @@ app.get('/', (req, res) => {
   })
 })
 
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error
+  }
+
+  const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges')
+      process.exit(1)
+      break
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use')
+      process.exit(1)
+      break
+    default:
+      throw error
+  }
+}
+
+function onListening() {
+  const addr = server.address()
+  const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port
+  console.log('Listening on ' + bind)
+}
+
 app.listen(PORT, () => console.log(`Server is running in: ${process.env.APP_BASE_URL}`))
+
+app.on('error', onError)
+app.on('listening', onListening)
