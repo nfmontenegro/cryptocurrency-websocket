@@ -28,7 +28,7 @@ jobs:
         npm audit fix
         npm test
     - name: Migrations
-        run: |
+      run: |
         npm run migration:save
         npm run migration:up
         npm run generate
