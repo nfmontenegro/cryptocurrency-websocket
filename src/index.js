@@ -11,7 +11,10 @@ const {APP_BASE_URL, PORT} = require('./config')
 const {userRouter} = require('./routes')
 
 const app = express()
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+  log: ['info', 'warn', 'query'],
+  errorFormat: 'pretty'
+})
 
 app.use(bodyParser.json())
 app.use(cors())

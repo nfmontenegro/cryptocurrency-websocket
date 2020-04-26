@@ -20,9 +20,11 @@ const registerUser = async (req, res, next) => {
 }
 
 const getUsers = async (req, res, next) => {
-  const {page, limit} = req.query
+  const {page = 1, limit: paginationLimit = 10} = req.query
+  const pageNumber = +page
+  const limit = +paginationLimit
   try {
-    const users = await req.prisma.user.findMany()
+    const users = await req.prisma.user.findMany({first: limit, skip: (pageNumber - 1) * limit})
     return res.status(200).json(users)
   } catch (err) {
     next(err)
@@ -83,7 +85,7 @@ const login = async (req, res, next) => {
       return res.status(400).json({message: 'Invalid password'})
     }
 
-    const token = sign({userId: user.id}, SECRET, {expiresIn: '5m'})
+    const token = sign({userId: user.id}, SECRET, {expiresIn: '1h'})
 
     return res.status(200).json({token, user})
   } catch (err) {
