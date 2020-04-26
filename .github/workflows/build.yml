@@ -17,17 +17,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Cache node modules
+    - name: Cache Node.js modules
       uses: actions/cache@v1
-      env:
-        cache-name: cache-node-modules
       with:
-        path: ~/.npm
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+        key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+          ${{ runner.OS }}-node-
+          ${{ runner.OS }}-
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
