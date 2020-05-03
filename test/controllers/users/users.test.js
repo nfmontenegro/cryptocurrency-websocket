@@ -31,13 +31,20 @@ describe('Test user controllers', () => {
         lastname: 'Flores',
         id: 1,
         password: '$2a$10$DDP.K5NlbqqiXZ13SZ9.TuAulCjc066UlaLy7QeyklXPnppy67FWK'
+      },
+      {
+        name: 'Carolina',
+        email: 'caro@gmail.com',
+        lastname: 'Munhoz',
+        id: 2,
+        password: '$2a$10$DDP.K5NlbqqiXZ13SZ9.TuAulCjc066UlaLy7QeyklXPnppy67FWK'
       }
     ])
   })
 
   test('should return one user', async () => {
     request.params = {
-      id: '1'
+      id: 1
     }
 
     response.json = jest.fn(() => usersMockData[0])
@@ -58,7 +65,7 @@ describe('Test user controllers', () => {
 
   test('should return user not found', async () => {
     request.params = {
-      id: '11111123123'
+      id: 11111123123
     }
 
     response.json = jest.fn(() => ({message: 'User not found'}))
@@ -125,9 +132,7 @@ describe('Test user controllers', () => {
   })
 
   test('should return user not found when try to delete one user', async () => {
-    request.params = {
-      id: '1111'
-    }
+    request.params.id = 3
 
     response.json = jest.fn(() => ({message: 'User not found'}))
 
@@ -208,5 +213,13 @@ describe('Test user controllers', () => {
     expect(response.json).toHaveBeenCalledTimes(1)
     expect(response.status).toHaveBeenCalledTimes(1)
     expect(response.status).toHaveBeenCalledWith(200)
+  })
+
+  test('should delete a user', async () => {
+    request.params.id = 1
+    response.json = jest.fn(() => usersMockData.filter(user => user.id !== 1))
+    const requestDeleteUser = await deleteUser(request, response)
+
+    expect(requestDeleteUser.length).toBe(2)
   })
 })

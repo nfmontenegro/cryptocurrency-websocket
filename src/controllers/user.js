@@ -50,15 +50,43 @@ const getUser = async (req, res, next) => {
   }
 }
 
-const deleteUser = async (req, res, next) => {
+async function deleteUser(req, res, next) {
   try {
     const id = parseInt(req.params.id)
 
     if (!id) {
-      res.status(400).json({message: 'Param resource not found'})
+      return res.status(400).json({message: 'Param resource not found'})
     }
 
-    const user = await req.prisma.user.delete({where: {id}})
+    const user = await req.prisma.user.delete({
+      where: {
+        id
+      }
+    })
+
+    if (user) {
+      return res.status(200).json(user)
+    } else {
+      return res.status(404).json({message: 'User not found'})
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function updateUser(req, res, next) {
+  try {
+    const id = parseInt(req.params.id)
+    if (!id) {
+      return res.status(400).json({message: 'Param resource not found'})
+    }
+
+    const user = await req.prisma.user.update({
+      where: {
+        id
+      },
+      data: req.body
+    })
 
     if (user) {
       return res.status(200).json(user)

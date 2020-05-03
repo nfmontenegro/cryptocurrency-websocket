@@ -15,12 +15,16 @@ module.exports = {
         },
         create: user => {
           2
-          usersMockData.push({id: '12345678', ...user})
+          usersMockData.push({id: 12345678, ...user.data})
           return user
         },
         delete: ({where: {id}}) => {
-          const user = usersMockData[0]
-          return id === user.id ? user : null
+          const findUser = usersMockData.find(user => user.id === id)
+          if (findUser) {
+            return usersMockData.filter(user => user.id !== id)
+          } else {
+            return null
+          }
         }
       }
     }
