@@ -3,7 +3,7 @@ const {hash, compare} = require('bcryptjs')
 
 const {SECRET} = require('../config')
 
-const registerUser = async (req, res, next) => {
+async function registerUser(req, res, next) {
   try {
     const {password, email} = req.body
     const [hashedPassword, hadUser] = await Promise.all([hash(password, 10), req.prisma.user.findOne({where: {email}})])
@@ -12,14 +12,19 @@ const registerUser = async (req, res, next) => {
       return res.status(400).json({message: `User with email ${email} exist`})
     }
 
-    const user = await req.prisma.user.create({data: {...req.body, password: hashedPassword}})
+    const user = await req.prisma.user.create({
+      data: {
+        ...req.body,
+        password: hashedPassword
+      }
+    })
     return res.status(201).json(user)
   } catch (err) {
     next(err)
   }
 }
 
-const getUsers = async (req, res, next) => {
+async function getUsers(req, res, next) {
   const {page = 1, limit: paginationLimit = 10} = req.query
   const pageNumber = +page
   const limit = +paginationLimit
@@ -31,7 +36,7 @@ const getUsers = async (req, res, next) => {
   }
 }
 
-const getUser = async (req, res, next) => {
+async function getUser(req, res, next) {
   try {
     const id = parseInt(req.params.id)
 
@@ -98,7 +103,7 @@ async function updateUser(req, res, next) {
   }
 }
 
-const login = async (req, res, next) => {
+async function login(req, res, next) {
   try {
     const {password, email} = req.body
     const user = await req.prisma.user.findOne({where: {email}})
@@ -121,7 +126,7 @@ const login = async (req, res, next) => {
   }
 }
 
-const userProfile = async (req, res, next) => {
+async function userProfile(req, res, next) {
   try {
     const id = parseInt(req.token.userId)
 
