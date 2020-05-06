@@ -12,7 +12,8 @@
     "migration:save": "./node_modules/.bin/prisma migrate save --experimental",
     "migration:up": "./node_modules/.bin/prisma migrate up --experimental",
     "generate": "./node_modules/.bin/prisma generate",
-    "gcp-build": "./node_modules/.bin/prisma generate"
+    "gcp-build": "./node_modules/.bin/prisma generate",
+    "prisma-studio": "./node_modules/.bin/prisma studio --expirmental"
   },
   "keywords": [
     "node.js",

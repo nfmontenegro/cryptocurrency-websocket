@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const util = require('util')
 const {SECRET} = require('../config')
 
-const verifyToken = async (req, res, next) => {
+async function verifyToken(req, res, next) {
   try {
     let token = req.headers['authorization']
     if (token && token.startsWith('Bearer ')) {
