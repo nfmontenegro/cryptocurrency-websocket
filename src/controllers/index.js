@@ -1,5 +1,5 @@
 const {registerUser, getUser, getUsers, deleteUser, login, userProfile} = require('./user')
-const {createPost, getPosts, getPost} = require('./post')
+const {createPost, getPosts, getPost, getUsersPosts} = require('./post')
 
 module.exports = {
   registerUser,
@@ -10,5 +10,6 @@ module.exports = {
   userProfile,
   createPost,
   getPosts,
-  getPost
+  getPost,
+  getUsersPosts
 }
