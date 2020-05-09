@@ -15,6 +15,8 @@ async function createPost(req, res, next) {
     return res.status(201).send(post)
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
@@ -24,6 +26,8 @@ async function getPosts(req, res, next) {
     return res.status(200).send(posts)
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
@@ -38,6 +42,8 @@ async function getUsersPosts(req, res, next) {
     return res.status(200).send(posts)
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
@@ -57,6 +63,8 @@ async function getPost(req, res, next) {
     }
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 

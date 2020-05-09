@@ -21,6 +21,8 @@ async function registerUser(req, res, next) {
     return res.status(201).json(user)
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
@@ -33,6 +35,8 @@ async function getUsers(req, res, next) {
     return res.status(200).json(users)
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
@@ -52,6 +56,8 @@ async function getUser(req, res, next) {
     }
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
@@ -76,6 +82,8 @@ async function deleteUser(req, res, next) {
     }
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
@@ -100,6 +108,8 @@ async function updateUser(req, res, next) {
     }
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
@@ -123,6 +133,8 @@ async function login(req, res, next) {
     return res.status(200).json({token, user})
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
@@ -139,6 +151,8 @@ async function userProfile(req, res, next) {
     }
   } catch (err) {
     return next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
