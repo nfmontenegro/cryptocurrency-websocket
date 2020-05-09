@@ -1,4 +1,4 @@
-module.exporst = {
+module.exports = {
   mockRequest: () => {
     const req = {}
     req.prisma = {
