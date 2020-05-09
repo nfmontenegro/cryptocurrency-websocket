@@ -7,6 +7,7 @@ module.exports = {
     req.params = jest.fn().mockReturnValue(req)
     req.query = jest.fn().mockReturnValue(req)
     req.prisma = {
+      disconnect: {},
       user: {
         findMany: () => usersMockData,
         findOne: ({where: {id, email}}) => {
