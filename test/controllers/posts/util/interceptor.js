@@ -2,7 +2,7 @@ module.exporst = {
   mockRequest: () => {
     const req = {}
     req.prisma = {
-      disconnect: {}
+      disconnect: () => null
     }
     return req
   },
