@@ -31,7 +31,10 @@ async function getUsers(req, res, next) {
   const pageNumber = +page
   const limit = +paginationLimit
   try {
-    const users = await req.prisma.user.findMany({first: limit, skip: (pageNumber - 1) * limit})
+    const users = await req.prisma.user.findMany({
+      first: limit,
+      skip: (pageNumber - 1) * limit
+    })
     return res.status(200).json(users)
   } catch (err) {
     next(err)
@@ -48,7 +51,11 @@ async function getUser(req, res, next) {
       return res.status(400).json({message: 'Param resource not found'})
     }
 
-    const user = await req.prisma.user.findOne({where: {id}})
+    const user = await req.prisma.user.findOne({
+      where: {
+        id
+      }
+    })
     if (user) {
       return res.status(200).json(user)
     } else {
@@ -142,7 +149,11 @@ async function userProfile(req, res, next) {
   try {
     const id = parseInt(req.token.userId)
 
-    const user = await req.prisma.user.findOne({where: {id}})
+    const user = await req.prisma.user.findOne({
+      where: {
+        id
+      }
+    })
 
     if (user) {
       return res.status(200).json(user)
