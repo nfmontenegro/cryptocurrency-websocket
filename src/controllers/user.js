@@ -1,3 +1,4 @@
+const {inspect} = require('util')
 const {sign} = require('jsonwebtoken')
 const {hash, compare} = require('bcryptjs')
 
@@ -5,6 +6,8 @@ const {SECRET} = require('../config')
 
 const registerUser = async (req, res, next) => {
   try {
+    console.log('register user params:', inspect(req.body, true, 2, false))
+
     const {password, email} = req.body
     const [hashedPassword, hadUser] = await Promise.all([hash(password, 10), req.prisma.user.findOne({where: {email}})])
 
@@ -20,6 +23,8 @@ const registerUser = async (req, res, next) => {
 }
 
 const getUsers = async (req, res, next) => {
+  console.log(inspect(req.query, true, 2, false))
+
   const {page = 1, limit: paginationLimit = 10} = req.query
   const pageNumber = +page
   const limit = +paginationLimit
@@ -33,6 +38,7 @@ const getUsers = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
   try {
+    console.log('get user id:', inspect(req.params, true, 2, false))
     const id = parseInt(req.params.id)
 
     if (!id) {
@@ -52,6 +58,7 @@ const getUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
   try {
+    console.log('delete user id:', inspect(req.params, true, 2, false))
     const id = parseInt(req.params.id)
 
     if (!id) {
@@ -72,6 +79,8 @@ const deleteUser = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
+    console.log('login user:', inspect(req.body, true, 2, false))
+
     const {password, email} = req.body
     const user = await req.prisma.user.findOne({where: {email}})
 
@@ -95,8 +104,9 @@ const login = async (req, res, next) => {
 
 const userProfile = async (req, res, next) => {
   try {
-    const id = parseInt(req.token.userId)
+    console.log('user profile id:', inspect(req.token.userId, true, 2, false))
 
+    const id = parseInt(req.token.userId)
     const user = await req.prisma.user.findOne({where: {id}})
 
     if (user) {
