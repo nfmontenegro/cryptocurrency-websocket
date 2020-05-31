@@ -8,7 +8,7 @@ const {PrismaClient} = require('@prisma/client')
 dotenv.config()
 
 const {APP_BASE_URL, PORT} = require('./config')
-const {userRouter} = require('./routes')
+const {userRouter, postRouter} = require('./routes')
 
 const app = express()
 const prisma = new PrismaClient({
@@ -33,6 +33,7 @@ app.use((err, req, res, next) => {
 })
 
 app.use('/api/v1', userRouter)
+app.use('/api/v1', postRouter)
 
 app.get('/', (req, res) => {
   res.json({

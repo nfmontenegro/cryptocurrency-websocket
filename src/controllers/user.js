@@ -4,7 +4,7 @@ const {hash, compare} = require('bcryptjs')
 
 const {SECRET} = require('../config')
 
-const registerUser = async (req, res, next) => {
+async function registerUser(req, res, next) {
   try {
     console.log('register user params:', inspect(req.body, true, 2, false))
 
@@ -15,28 +15,39 @@ const registerUser = async (req, res, next) => {
       return res.status(400).json({message: `User with email ${email} exist`})
     }
 
-    const user = await req.prisma.user.create({data: {...req.body, password: hashedPassword}})
+    const user = await req.prisma.user.create({
+      data: {
+        ...req.body,
+        password: hashedPassword
+      }
+    })
     return res.status(201).json(user)
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
-const getUsers = async (req, res, next) => {
+async function getUsers(req, res, next) {
   console.log(inspect(req.query, true, 2, false))
-
   const {page = 1, limit: paginationLimit = 10} = req.query
   const pageNumber = +page
   const limit = +paginationLimit
   try {
-    const users = await req.prisma.user.findMany({first: limit, skip: (pageNumber - 1) * limit})
+    const users = await req.prisma.user.findMany({
+      first: limit,
+      skip: (pageNumber - 1) * limit
+    })
     return res.status(200).json(users)
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
-const getUser = async (req, res, next) => {
+async function getUser(req, res, next) {
   try {
     console.log('get user id:', inspect(req.params, true, 2, false))
     const id = parseInt(req.params.id)
@@ -45,7 +56,11 @@ const getUser = async (req, res, next) => {
       return res.status(400).json({message: 'Param resource not found'})
     }
 
-    const user = await req.prisma.user.findOne({where: {id}})
+    const user = await req.prisma.user.findOne({
+      where: {
+        id
+      }
+    })
     if (user) {
       return res.status(200).json(user)
     } else {
@@ -53,19 +68,25 @@ const getUser = async (req, res, next) => {
     }
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
-const deleteUser = async (req, res, next) => {
+async function deleteUser(req, res, next) {
   try {
     console.log('delete user id:', inspect(req.params, true, 2, false))
     const id = parseInt(req.params.id)
 
     if (!id) {
-      res.status(400).json({message: 'Param resource not found'})
+      return res.status(400).json({message: 'Param resource not found'})
     }
 
-    const user = await req.prisma.user.delete({where: {id}})
+    const user = await req.prisma.user.delete({
+      where: {
+        id
+      }
+    })
 
     if (user) {
       return res.status(200).json(user)
@@ -74,10 +95,38 @@ const deleteUser = async (req, res, next) => {
     }
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
-const login = async (req, res, next) => {
+async function updateUser(req, res, next) {
+  try {
+    const id = parseInt(req.params.id)
+    if (!id) {
+      return res.status(400).json({message: 'Param resource not found'})
+    }
+
+    const user = await req.prisma.user.update({
+      where: {
+        id
+      },
+      data: req.body
+    })
+
+    if (user) {
+      return res.status(200).json(user)
+    } else {
+      return res.status(404).json({message: 'User not found'})
+    }
+  } catch (err) {
+    next(err)
+  } finally {
+    await req.prisma.disconnect()
+  }
+}
+
+async function login(req, res, next) {
   try {
     console.log('login user:', inspect(req.body, true, 2, false))
 
@@ -99,15 +148,25 @@ const login = async (req, res, next) => {
     return res.status(200).json({token, user})
   } catch (err) {
     next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 
-const userProfile = async (req, res, next) => {
+async function userProfile(req, res, next) {
   try {
     console.log('user profile id:', inspect(req.token.userId, true, 2, false))
 
+<<<<<<< HEAD
     const id = parseInt(req.token.userId)
     const user = await req.prisma.user.findOne({where: {id}})
+=======
+    const user = await req.prisma.user.findOne({
+      where: {
+        id
+      }
+    })
+>>>>>>> ecff43b2c7f265880674b05e3f44ac2ee6d2b38b
 
     if (user) {
       return res.status(200).json(user)
@@ -116,6 +175,8 @@ const userProfile = async (req, res, next) => {
     }
   } catch (err) {
     return next(err)
+  } finally {
+    await req.prisma.disconnect()
   }
 }
 

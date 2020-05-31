@@ -10,9 +10,10 @@
     "test:watch": "npm run test -- --watch",
     "test:coverage": "jest --coverage",
     "migration:save": "./node_modules/.bin/prisma migrate save --experimental",
-    "migration:up":  "./node_modules/.bin/prisma migrate up --experimental",
+    "migration:up": "./node_modules/.bin/prisma migrate up --experimental",
     "generate": "./node_modules/.bin/prisma generate",
-    "gcp-build": "./node_modules/.bin/prisma generate"
+    "gcp-build": "./node_modules/.bin/prisma generate",
+    "prisma-studio": "./node_modules/.bin/prisma studio --expirmental"
   },
   "keywords": [
     "node.js",
@@ -23,7 +24,6 @@
   "author": "Nicolás Flores Montenegro",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "2.0.0-beta.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -33,8 +33,8 @@
     "morgan": "^1.9.1"
   },
   "devDependencies": {
-    "@prisma/cli": "^2.0.0-beta.2",
-    "@prisma/client": "2.0.0-beta.2",
+    "@prisma/cli": "^2.0.0-beta.4",
+    "@prisma/client": "^2.0.0-beta.2",
     "jest": "^25.1.0",
     "nodemon": "^2.0.2",
     "prisma": "^1.34.10"
