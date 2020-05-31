@@ -155,13 +155,16 @@ async function login(req, res, next) {
 
 async function userProfile(req, res, next) {
   try {
-    console.log('user profile id:', inspect(req.token.userId, true, 2, false))
+    console.log('user profile id:', inspect(req.token, true, 2, false))
 
+    const {userId: id} = req.token
     const user = await req.prisma.user.findOne({
       where: {
         id
       }
     })
+
+    console.log('user', user)
 
     if (user) {
       return res.status(200).json(user)
@@ -169,7 +172,8 @@ async function userProfile(req, res, next) {
       return res.status(404).json({message: 'User not found'})
     }
   } catch (err) {
-    return next(err)
+    console.log(err)
+    next(err)
   } finally {
     await req.prisma.disconnect()
   }

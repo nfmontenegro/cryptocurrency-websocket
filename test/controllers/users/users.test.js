@@ -201,7 +201,7 @@ describe('Test user controllers', () => {
 
   test('should return user profile', async () => {
     request.token = {
-      userId: '1',
+      userId: 1,
       iat: 1586494860,
       exp: 1586495160
     }
