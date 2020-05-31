@@ -157,16 +157,11 @@ async function userProfile(req, res, next) {
   try {
     console.log('user profile id:', inspect(req.token.userId, true, 2, false))
 
-<<<<<<< HEAD
-    const id = parseInt(req.token.userId)
-    const user = await req.prisma.user.findOne({where: {id}})
-=======
     const user = await req.prisma.user.findOne({
       where: {
         id
       }
     })
->>>>>>> ecff43b2c7f265880674b05e3f44ac2ee6d2b38b
 
     if (user) {
       return res.status(200).json(user)
