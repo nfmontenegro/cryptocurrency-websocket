@@ -4,7 +4,8 @@
   "description": "API Prisma",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index",
+    "start": "npm run serve",
+    "serve": "node dist/src/index.js",
     "dev": "nodemon src/index",
     "test": "jest --config ./jest.config.json",
     "test:watch": "npm run test -- --watch",
@@ -12,7 +13,6 @@
     "migration:save": "./node_modules/.bin/prisma migrate save --experimental",
     "migration:up": "./node_modules/.bin/prisma migrate up --experimental",
     "generate": "./node_modules/.bin/prisma generate",
-    "gcp-build": "./node_modules/.bin/prisma generate",
     "prisma-studio": "./node_modules/.bin/prisma studio --expirmental"
   },
   "keywords": [
@@ -35,9 +35,15 @@
   "devDependencies": {
     "@prisma/cli": "^2.0.0-beta.4",
     "@prisma/client": "^2.0.0-beta.2",
+    "@types/node": "^14.0.11",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "install-peerdeps": "^2.0.3",
     "jest": "^25.1.0",
     "nodemon": "^2.0.2",
-    "prisma": "^1.34.10"
+    "prisma": "^1.34.10",
+    "typescript": "^3.9.5"
   },
   "engines": {
     "node": "^12.0.0",
