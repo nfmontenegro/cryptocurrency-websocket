@@ -36,8 +36,8 @@ jobs:
         npm audit fix
     - name: Audit
       run: npm audit fix
-    - name: Test
-      run: npm test
+    # - name: Test
+    #   run: npm test
     # - name: Initialize Google Cloud SDK
     #   uses: zxyle/publish-gae-action@master
     #   with:
