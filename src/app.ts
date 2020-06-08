@@ -1,7 +1,9 @@
-import express, {Application, Request, Response} from 'express';
 import bodyParser from 'body-parser';
+import express, {Application} from 'express';
 
-// import { MONGODB_URI, SESSION_SECRET } from "./util/secrets";
+import {pinoConfig} from './config';
+
+import {user} from './routes';
 
 // Controllers (route handlers);
 
@@ -12,6 +14,9 @@ import bodyParser from 'body-parser';
 // Create Express server
 const app: Application = express();
 
+// tslint:disable-next-line: no-var-requires
+const {logger} = require('pino-http')(pinoConfig);
+
 // Express configuration
 app.set('port', process.env.PORT || 3000);
 app.use(bodyParser.json());
@@ -21,7 +26,6 @@ app.use(
   })
 );
 
-app.get('/', (_request: Request, response: Response) => response.send('hello'));
 // app.use((req, res, next) => {
 //   res.locals.user = req.user;
 //   next();
@@ -30,9 +34,6 @@ app.get('/', (_request: Request, response: Response) => response.send('hello'));
 /**
  * Primary app routes.
  */
+app.use('/api/v1', user);
 
-/**
- * API examples routes.
- */
-
-export default app;
+export {app, logger};

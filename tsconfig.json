@@ -1,38 +1,38 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "target": "ES2019",
-        "declaration": false,
-        "lib": [
-            "es2017"
-        ],
-        "types": [
-            "node"
-        ],
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-        "esModuleInterop": true,
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noImplicitUseStrict": false,
-        "sourceMap": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "forceConsistentCasingInFileNames": true,
-        "traceResolution": false,
-        "listFiles": false,
-        "outDir": "dist",
-        "stripInternal": true,
-        "skipDefaultLibCheck": true,
-        "skipLibCheck": false,
-        "pretty": true,
-        "noEmitOnError": false
-    },
-    "exclude": [
-        "node_modules"
-    ]
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2019",
+    "declaration": false,
+    "lib": [
+      "es2017"
+    ],
+    "types": [
+      "node"
+    ],
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitUseStrict": false,
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "traceResolution": false,
+    "listFiles": false,
+    "outDir": "dist",
+    "stripInternal": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": false,
+    "pretty": true,
+    "noEmitOnError": false
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

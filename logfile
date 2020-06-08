@@ -1,9 +1,0 @@
-2020-06-06 23:59:09.747 -04 [39956] LOG:  starting PostgreSQL 12.1 on x86_64-apple-darwin18.7.0, compiled by Apple clang version 11.0.0 (clang-1100.0.33.16), 64-bit
-2020-06-06 23:59:09.748 -04 [39956] LOG:  listening on IPv6 address "::1", port 5432
-2020-06-06 23:59:09.748 -04 [39956] LOG:  listening on IPv4 address "127.0.0.1", port 5432
-2020-06-06 23:59:09.749 -04 [39956] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
-2020-06-06 23:59:09.768 -04 [39957] LOG:  database system was shut down at 2020-06-05 21:23:49 -04
-2020-06-06 23:59:09.773 -04 [39956] LOG:  database system is ready to accept connections
-2020-06-06 23:59:35.994 -04 [40006] ERROR:  role "prisma" does not exist
-2020-06-06 23:59:35.994 -04 [40006] STATEMENT:  CREATE DATABASE prisma OWNER prisma;
-2020-06-07 00:05:18.007 -04 [40452] FATAL:  role "prisma" does not exist
