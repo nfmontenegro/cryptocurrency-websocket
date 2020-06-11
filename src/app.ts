@@ -1,8 +1,6 @@
 import bodyParser from 'body-parser';
 import express, {Application} from 'express';
 
-import {pinoConfig} from './config';
-
 import {user} from './routes';
 
 // Controllers (route handlers);
@@ -13,9 +11,6 @@ import {user} from './routes';
 
 // Create Express server
 const app: Application = express();
-
-// tslint:disable-next-line: no-var-requires
-const {logger} = require('pino-http')(pinoConfig);
 
 // Express configuration
 app.set('port', process.env.PORT || 3000);
@@ -36,4 +31,4 @@ app.use(
  */
 app.use('/api/v1', user);
 
-export {app, logger};
+export {app};

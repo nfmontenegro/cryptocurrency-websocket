@@ -10,7 +10,7 @@
     "types": [
       "node"
     ],
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "strictNullChecks": true,
     "esModuleInterop": true,
     "noFallthroughCasesInSwitch": true,
@@ -30,7 +30,8 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": false,
     "pretty": true,
-    "noEmitOnError": false
+    "noEmitOnError": false,
+
   },
   "exclude": [
     "node_modules"

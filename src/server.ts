@@ -1,4 +1,5 @@
-import {app, logger} from './app';
+import {app} from './app';
+import logger from './util/logger';
 import {ENVIRONMENT} from './util/secrets';
 
 /**
