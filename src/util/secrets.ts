@@ -12,6 +12,7 @@ if (fs.existsSync('.env')) {
 }
 
 export const ENVIRONMENT = process.env.NODE_ENV;
+export const PORT = process.env.PORT;
 
 if (!ENVIRONMENT) {
   logger.info('No client secret. Set SESSION_SECRET environment variable.');
