@@ -1,6 +1,8 @@
-interface User {
-  name: string;
+interface IUser {
   email: string;
+  password: string;
+  name: string;
+  lastname: string;
 }
 
-export {User};
+export {IUser};
