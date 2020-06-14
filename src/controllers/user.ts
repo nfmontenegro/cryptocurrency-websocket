@@ -10,7 +10,7 @@ async function createUser(request: Request, response: Response): Promise<any> {
     const user = request.body as IUser;
 
     if (!Object.keys(user).length) {
-      const responseMessage = errorResponseMessage('request not have content', 204);
+      const responseMessage = errorResponseMessage('', 204);
       return response.status(204).send(responseMessage);
     }
 

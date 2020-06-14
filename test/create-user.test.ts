@@ -76,6 +76,6 @@ describe('user test', (): void => {
 
     expect(res.status).toHaveBeenCalledWith(204);
 
-    expect(res.send).toBeCalledWith({result: [{error: {code: 204, message: 'Error:  request not have content'}, status: 'failure'}]});
+    expect(res.send).toBeCalledWith({result: [{error: {code: 204, message: 'Error:  '}, status: 'failure'}]});
   });
 });
