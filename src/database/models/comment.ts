@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       postId: DataTypes.INTEGER,
       comment: DataTypes.TEXT,
-      userId: DataTypes.INTEGER
+      userId: DataTypes.STRING
     },
     {}
   );

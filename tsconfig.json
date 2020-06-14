@@ -8,7 +8,7 @@
       "es2017"
     ],
     "types": [
-      "node"
+      "node", "jest"
     ],
     "noImplicitAny": false,
     "strictNullChecks": true,

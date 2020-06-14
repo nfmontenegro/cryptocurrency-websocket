@@ -2,13 +2,13 @@ module.exports = (sequelize, DataTypes) => {
   const Post = sequelize.define(
     'Post',
     {
-      title: DataTypes.STRING,
+      title: DataTypes.INTEGER,
       content: DataTypes.TEXT,
-      userId: DataTypes.INTEGER
+      userId: DataTypes.STRING
     },
     {}
   );
-  Post.associate = function (models) {
+  Post.associate = models => {
     // associations can be defined here
     Post.hasMany(models.Comment, {
       foreignKey: 'postId',

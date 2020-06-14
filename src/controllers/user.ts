@@ -1,4 +1,3 @@
-import {Op} from 'sequelize';
 import {Request, Response} from 'express';
 
 import db from '../database/models';
@@ -6,28 +5,32 @@ import logger from '../util/logger';
 import errorResponseMessage from '../util/response-parser';
 import {IUser} from '../interfaces/models';
 
-async function createUser(request: Request, response: Response): Promise<void> {
+async function createUser(request: Request, response: Response): Promise<any> {
   try {
-    logger.debug('params to create user: ', request.body);
     const user = request.body as IUser;
 
-    const userEmailExist = await db.User.findAll({
+    if (!Object.keys(user).length) {
+      const responseMessage = errorResponseMessage('request not have content', 204);
+      return response.status(204).send(responseMessage);
+    }
+
+    logger.debug('params to create user: ', user);
+    const userEmailExist = await db.User.findOne({
       where: {
-        email: {
-          [Op.eq]: user.email
-        }
+        email: user.email
       }
     });
 
-    if (userEmailExist.length) {
-      response.status(200).send('Email exist');
+    if (userEmailExist) {
+      const responseMessage = errorResponseMessage(`email ${user.email} already exists!`, 409);
+      return response.status(409).send(responseMessage);
     }
 
     const users = await db.User.create(user);
-    response.status(200).send(users);
+    return response.status(201).send(users);
   } catch (err) {
     const errorMessage = errorResponseMessage(err.message, 500);
-    response.status(500).send(errorMessage);
+    return response.status(500).send(errorMessage);
   }
 }
 

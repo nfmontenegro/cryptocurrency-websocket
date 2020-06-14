@@ -3,10 +3,9 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Comments', {
       id: {
-        allowNull: false,
+        type: Sequelize.INTEGER,
         autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
+        primaryKey: true
       },
       postId: {
         type: Sequelize.INTEGER
@@ -22,6 +21,10 @@ module.exports = {
         type: Sequelize.DATE
       },
       updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      deletedAt: {
         allowNull: false,
         type: Sequelize.DATE
       }
