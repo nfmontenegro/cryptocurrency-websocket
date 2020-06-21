@@ -1,9 +1,10 @@
 import {Request, Response} from "express";
 
-import db from "../database/models";
 import logger from "../util/logger";
 import errorResponseMessage from "../util/response-parser";
 import {IUser} from "../interfaces/models";
+
+import {findOne, create} from "../lib/database";
 
 async function createUser(request: Request, response: Response): Promise<any> {
   try {
@@ -15,18 +16,14 @@ async function createUser(request: Request, response: Response): Promise<any> {
     }
 
     logger.debug("params to create user: ", user);
-    const userEmailExist = await db.User.findOne({
-      where: {
-        email: user.email
-      }
-    });
 
+    const userEmailExist = await findOne("User", "email", user.email);
     if (userEmailExist) {
       const responseMessage = errorResponseMessage(`email ${user.email} already exists!`, 409);
       return response.status(409).send(responseMessage);
     }
 
-    const users = await db.User.create(user);
+    const users = await create("User", user);
     return response.status(201).send(users);
   } catch (err) {
     const errorMessage = errorResponseMessage(err.message, 500);

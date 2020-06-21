@@ -1,7 +1,7 @@
-import bodyParser from 'body-parser';
-import express, {Application} from 'express';
+import bodyParser from "body-parser";
+import express, {Application} from "express";
 
-import {user} from './routes';
+import {user} from "./routes";
 
 // Controllers (route handlers);
 
@@ -13,7 +13,7 @@ import {user} from './routes';
 const app: Application = express();
 
 // Express configuration
-app.set('port', process.env.PORT || 3000);
+app.set("port", process.env.PORT || 3000);
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
@@ -29,6 +29,6 @@ app.use(
 /**
  * Primary app routes.
  */
-app.use('/api/v1', user);
+app.use("/api/v1", user);
 
 export {app};

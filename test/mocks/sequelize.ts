@@ -1,5 +1,5 @@
-import mockUserData from './user';
-import {IUser} from '../../src/interfaces/models';
+import mockUserData from "./user";
+import {IUser} from "../../src/interfaces/models";
 
 const mockSequelizeModels = {
   User: {
