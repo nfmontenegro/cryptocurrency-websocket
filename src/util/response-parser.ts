@@ -1,10 +1,10 @@
-import {IErrorMessage} from '../interfaces/messages';
+import {IErrorMessage} from "../interfaces/messages";
 
 function errorResponseMessage(message: string, statusCode: number): IErrorMessage {
   return {
     result: [
       {
-        status: 'failure',
+        status: "failure",
         error: {
           code: statusCode,
           message: `Error:  ${message}`

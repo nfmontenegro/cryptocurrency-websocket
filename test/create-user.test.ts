@@ -3,7 +3,7 @@ import mockSequelizeModels from "./mocks/sequelize";
 import db from "../src/database/models";
 import logger from "../src/util/logger";
 import {createUser} from "../src/controllers";
-import {req, res} from "./interceptor-request";
+import {req, res, next} from "./interceptor-request";
 
 jest.mock("../src/util/logger", (): any => ({
   debug: jest.fn(),
@@ -25,7 +25,7 @@ describe("user test", (): void => {
       password: "12345678"
     };
 
-    await createUser(req, res);
+    await createUser(req, res, next);
 
     const spyLogger = jest.spyOn(logger, "debug");
     expect(spyLogger).toHaveBeenCalled();
@@ -49,7 +49,7 @@ describe("user test", (): void => {
   test("should return 409 email already exists", async (): Promise<void> => {
     req.body = mockUserData[0];
 
-    await createUser(req, res);
+    await createUser(req, res, next);
 
     const spyLogger = jest.spyOn(logger, "debug");
     expect(spyLogger).toHaveBeenCalled();
@@ -69,7 +69,7 @@ describe("user test", (): void => {
   test("should return 204 empty request object", async (): Promise<void> => {
     req.body = {};
 
-    await createUser(req, res);
+    await createUser(req, res, next);
 
     expect(res.send).toHaveBeenCalledTimes(1);
     expect(res.status).toHaveBeenCalledTimes(1);

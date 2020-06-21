@@ -10,4 +10,6 @@ res.send = jest.fn().mockReturnValue(res);
 res.json = jest.fn().mockReturnValue(res);
 res.status = jest.fn().mockReturnValue(res);
 
-export {req, res};
+const next = jest.fn();
+
+export {req, res, next};

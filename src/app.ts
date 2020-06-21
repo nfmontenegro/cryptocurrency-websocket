@@ -1,13 +1,8 @@
 import bodyParser from "body-parser";
-import express, {Application} from "express";
+import express, {Application, Response, Request, NextFunction} from "express";
 
 import {user} from "./routes";
-
-// Controllers (route handlers);
-
-// import * as apiController from './controllers/api';
-
-// API keys and Passport configuration
+import errorResponseMessage from "./util/response-parser";
 
 // Create Express server
 const app: Application = express();
@@ -21,14 +16,14 @@ app.use(
   })
 );
 
-// app.use((req, res, next) => {
-//   res.locals.user = req.user;
-//   next();
-// });
-
 /**
  * Primary app routes.
  */
 app.use("/api/v1", user);
+
+app.use((error: any, _req: Request, res: Response, _next: NextFunction): any => {
+  const errorMessage = errorResponseMessage(error, 500);
+  return res.status(500).send(errorMessage);
+});
 
 export {app};

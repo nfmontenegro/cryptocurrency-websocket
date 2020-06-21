@@ -1,4 +1,4 @@
-import {Request, Response} from "express";
+import {Request, Response, NextFunction} from "express";
 
 import logger from "../util/logger";
 import errorResponseMessage from "../util/response-parser";
@@ -6,7 +6,7 @@ import {IUser} from "../interfaces/models";
 
 import {findOne, create} from "../lib/database";
 
-async function createUser(request: Request, response: Response): Promise<any> {
+async function createUser(request: Request, response: Response, next: NextFunction): Promise<any> {
   try {
     const user = request.body as IUser;
 
@@ -18,6 +18,7 @@ async function createUser(request: Request, response: Response): Promise<any> {
     logger.debug("params to create user: ", user);
 
     const userEmailExist = await findOne("User", "email", user.email);
+
     if (userEmailExist) {
       const responseMessage = errorResponseMessage(`email ${user.email} already exists!`, 409);
       return response.status(409).send(responseMessage);
@@ -26,8 +27,7 @@ async function createUser(request: Request, response: Response): Promise<any> {
     const users = await create("User", user);
     return response.status(201).send(users);
   } catch (err) {
-    const errorMessage = errorResponseMessage(err.message, 500);
-    return response.status(500).send(errorMessage);
+    next(err.message);
   }
 }
 
