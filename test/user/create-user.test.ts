@@ -1,16 +1,16 @@
-import mockUserData from "./mocks/user";
-import mockSequelizeModels from "./mocks/sequelize";
-import db from "../src/database/models";
-import logger from "../src/util/logger";
-import {createUser} from "../src/controllers";
-import {req, res, next} from "./interceptor-request";
+import mockUserData from "../mocks/user";
+import mockSequelizeModels from "../mocks/sequelize";
+import db from "../../src/database/models";
+import logger from "../../src/util/logger";
+import {createUser} from "../../src/controllers";
+import {req, res, next} from "../interceptor-request";
 
-jest.mock("../src/util/logger", (): any => ({
+jest.mock("../../src/util/logger", (): object => ({
   debug: jest.fn(),
   info: jest.fn()
 }));
 
-jest.mock("../src/database/models", (): object => mockSequelizeModels);
+jest.mock("../../src/database/models", (): object => mockSequelizeModels);
 
 describe("user test", (): void => {
   afterEach((): void => {

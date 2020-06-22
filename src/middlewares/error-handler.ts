@@ -1,0 +1,9 @@
+import {Response, Request, NextFunction} from "express";
+import errorResponseMessage from "../util/response-parser";
+
+function errorHandler(error: any, _req: Request, res: Response, _next: NextFunction): object {
+  const errorMessage = errorResponseMessage(error, 500);
+  return res.status(500).send(errorMessage);
+}
+
+export default errorHandler;

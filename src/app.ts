@@ -1,8 +1,8 @@
 import bodyParser from "body-parser";
-import express, {Application, Response, Request, NextFunction} from "express";
+import express, {Application} from "express";
 
 import {user} from "./routes";
-import errorResponseMessage from "./util/response-parser";
+import {errorHandler} from "./middlewares";
 
 // Create Express server
 const app: Application = express();
@@ -21,9 +21,6 @@ app.use(
  */
 app.use("/api/v1", user);
 
-app.use((error: any, _req: Request, res: Response, _next: NextFunction): any => {
-  const errorMessage = errorResponseMessage(error, 500);
-  return res.status(500).send(errorMessage);
-});
+app.use(errorHandler);
 
 export {app};

@@ -13,4 +13,9 @@ async function create(collection: string, params: IUser): Promise<any> {
   return db[collection].create(params);
 }
 
-export {findOne, create};
+async function getAll(collection: string): Promise<any> {
+  const users = db[collection].findAll();
+  return users;
+}
+
+export {findOne, create, getAll};

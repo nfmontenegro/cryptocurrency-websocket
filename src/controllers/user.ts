@@ -4,7 +4,8 @@ import logger from "../util/logger";
 import errorResponseMessage from "../util/response-parser";
 import {IUser} from "../interfaces/models";
 
-import {findOne, create} from "../lib/database";
+import {findOne, create, getAll} from "../lib/database";
+import {hashPassword} from "../lib/jwt";
 
 async function createUser(request: Request, response: Response, next: NextFunction): Promise<any> {
   try {
@@ -24,11 +25,21 @@ async function createUser(request: Request, response: Response, next: NextFuncti
       return response.status(409).send(responseMessage);
     }
 
-    const users = await create("User", user);
+    const hashedPassword = await hashPassword(user.password);
+    const users = await create("User", {...user, password: hashedPassword});
     return response.status(201).send(users);
   } catch (err) {
     next(err.message);
   }
 }
 
-export {createUser};
+async function getUsers(_request: Request, response: Response, next: NextFunction): Promise<any> {
+  try {
+    const users = await getAll("User");
+    return response.status(200).send(users);
+  } catch (err) {
+    next(err.message);
+  }
+}
+
+export {createUser, getUsers};
