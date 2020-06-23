@@ -1,5 +1,7 @@
 import bodyParser from "body-parser";
 import express, {Application} from "express";
+import cors from "cors";
+import morgan from "morgan";
 
 import {user} from "./routes";
 import {errorHandler} from "./middlewares";
@@ -10,6 +12,8 @@ const app: Application = express();
 // Express configuration
 app.set("port", process.env.PORT || 3000);
 app.use(bodyParser.json());
+app.use(cors);
+app.use(morgan("combined"));
 app.use(
   bodyParser.urlencoded({
     extended: true
