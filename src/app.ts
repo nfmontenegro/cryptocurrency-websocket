@@ -12,7 +12,7 @@ const app: Application = express();
 // Express configuration
 app.set("port", process.env.PORT || 3000);
 app.use(bodyParser.json());
-app.use(cors);
+app.use(cors());
 app.use(morgan("combined"));
 app.use(
   bodyParser.urlencoded({
