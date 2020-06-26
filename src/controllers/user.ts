@@ -9,7 +9,7 @@ import {findOne, create, getAll} from "../lib/database";
 import {hashPassword, comparePasswords} from "../lib/bcrypt";
 import {SECRET} from "../config";
 
-async function createUser(request: Request, response: Response, next: NextFunction): Promise<any> {
+async function createUser(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
   try {
     const user = request.body as IUser;
 
@@ -31,20 +31,20 @@ async function createUser(request: Request, response: Response, next: NextFuncti
     const users = await create("User", {...user, password: hashedPassword});
     return response.status(201).send(users);
   } catch (err) {
-    next(err.message);
+    return next(err.message);
   }
 }
 
-async function getUsers(_request: Request, response: Response, next: NextFunction): Promise<any> {
+async function getUsers(_request: Request, response: Response, next: NextFunction): Promise<Response | void> {
   try {
     const users = await getAll("User");
     return response.status(200).send(users);
   } catch (err) {
-    next(err.message);
+    return next(err.message);
   }
 }
 
-async function login(req: Request, res: Response, next: NextFunction): Promise<any> {
+async function login(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
   try {
     const {password, email} = req.body;
     const user = await findOne("User", "email", email);
@@ -65,7 +65,8 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<a
 
     return res.status(200).json({token, user});
   } catch (err) {
-    next(err.message);
+    console.log(err);
+    return next(err.message);
   }
 }
 
