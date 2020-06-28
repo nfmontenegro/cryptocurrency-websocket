@@ -1,6 +1,5 @@
 import {app} from "./app";
-import logger from "./util/logger";
-import {ENVIRONMENT, PORT} from "./util/secrets";
+import {ENVIRONMENT, PORT, logger} from "./util";
 
 /**
  * Start Express server.

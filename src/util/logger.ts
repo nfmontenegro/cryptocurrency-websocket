@@ -1,4 +1,4 @@
-import util from 'util';
+import util from "util";
 
 const logger = {
   info: (data: any): void => console.log(util.inspect(data, true, 3, true)),

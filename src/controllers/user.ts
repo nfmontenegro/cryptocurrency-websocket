@@ -1,13 +1,10 @@
 import {Request, Response, NextFunction} from "express";
 import {sign} from "jsonwebtoken";
 
-import logger from "../util/logger";
-import errorResponseMessage from "../util/response-parser";
-import {IUser} from "../interfaces/models";
-
-import {findOne, create, getAll} from "../lib/database";
-import {hashPassword, comparePasswords} from "../lib/bcrypt";
 import {SECRET} from "../config";
+import {IUser} from "../interfaces";
+import {logger, errorResponseMessage} from "../util";
+import {findOne, create, getAll, update, hashPassword, comparePasswords} from "../lib";
 
 async function createUser(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
   try {
@@ -44,8 +41,33 @@ async function getUsers(_request: Request, response: Response, next: NextFunctio
   }
 }
 
+async function updateUser(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+  try {
+    const userId = +req.params.userId;
+    if (!userId) {
+      return res.status(400).json({message: "Param resource not found"});
+    }
+
+    const query = {
+      where: {id: userId}
+    };
+
+    const user: IUser = await update("User", query, req.body);
+
+    if (user) {
+      return res.status(200).json(user);
+    } else {
+      return res.status(404).json({message: "User not found"});
+    }
+  } catch (err) {
+    return next(err.message);
+  }
+}
+
 async function login(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
   try {
+    logger.debug("params to login user: ", req.body.email);
+
     const {password, email} = req.body;
     const user = await findOne("User", "email", email);
 
@@ -70,4 +92,4 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
   }
 }
 
-export {createUser, getUsers, login};
+export {createUser, getUsers, login, updateUser};
