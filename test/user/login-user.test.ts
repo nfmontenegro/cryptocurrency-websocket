@@ -1,7 +1,4 @@
-// import mockUserData from "../mocks/user";
-import mockSequelizeModels from "../mocks/sequelize";
 import db from "../../src/database/models";
-// import logger from "../../src/util/logger";
 import {login} from "../../src/controllers";
 import {req, res, next} from "../interceptor-request";
 
@@ -14,7 +11,12 @@ jest.mock("../../src/lib/bcrypt", (): object => ({
   comparePasswords: jest.fn().mockReturnValue(false)
 }));
 
-jest.mock("../../src/database/models", (): object => mockSequelizeModels);
+jest.mock("../../src/database/models", (): object => ({
+  User: {
+    findOne: jest.fn(),
+    create: jest.fn()
+  }
+}));
 
 describe("login user test", (): void => {
   afterEach((): void => {
@@ -41,7 +43,6 @@ describe("login user test", (): void => {
 
     expect(res.send).toBeCalledWith(responseMessage);
     expect(res.status).toHaveBeenCalledWith(400);
-    spyFindOneUserModel.mockClear();
   });
 
   test("should return 400 invalid password", async (): Promise<void> => {
@@ -50,6 +51,7 @@ describe("login user test", (): void => {
       password: "12345678"
     };
 
+    db.User.findOne.mockReturnValueOnce(true);
     await login(req, res, next);
 
     const spyFindOneUserModel = jest.spyOn(db.User, "findOne");
@@ -64,6 +66,5 @@ describe("login user test", (): void => {
 
     expect(res.send).toBeCalledWith(responseMessage);
     expect(res.status).toHaveBeenCalledWith(400);
-    spyFindOneUserModel.mockClear();
   });
 });

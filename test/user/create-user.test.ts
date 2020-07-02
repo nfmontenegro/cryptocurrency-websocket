@@ -1,16 +1,20 @@
 import mockUserData from "../mocks/user";
-import mockSequelizeModels from "../mocks/sequelize";
-import db from "../../src/database/models";
 import logger from "../../src/util/logger";
 import {createUser} from "../../src/controllers";
 import {req, res, next} from "../interceptor-request";
+import db from "../../src/database/models";
 
 jest.mock("../../src/util/logger", (): object => ({
   debug: jest.fn(),
   info: jest.fn()
 }));
 
-jest.mock("../../src/database/models", (): object => mockSequelizeModels);
+jest.mock("../../src/database/models", (): object => ({
+  User: {
+    findOne: jest.fn(),
+    create: jest.fn()
+  }
+}));
 
 describe("user test", (): void => {
   afterEach((): void => {
@@ -25,6 +29,7 @@ describe("user test", (): void => {
       password: "12345678"
     };
 
+    db.User.create.mockReturnValueOnce(mockUserData);
     await createUser(req, res, next);
 
     const spyLogger = jest.spyOn(logger, "debug");
@@ -42,12 +47,11 @@ describe("user test", (): void => {
     expect(res.status).toHaveBeenCalledWith(201);
 
     expect(res.send).toBeCalledWith(mockUserData);
-    spyCreateUserModel.mockClear();
-    spyFindAllUserModel.mockClear();
   });
 
   test("should return 409 email already exists", async (): Promise<void> => {
     req.body = mockUserData[0];
+    db.User.findOne.mockReturnValueOnce(true);
 
     await createUser(req, res, next);
 
@@ -63,7 +67,6 @@ describe("user test", (): void => {
     expect(res.status).toHaveBeenCalledWith(409);
 
     expect(res.send).toBeCalledWith({result: [{error: {code: 409, message: "Error:  email fake@gmail.com already exists!"}, status: "failure"}]});
-    spyFindAllUserModel.mockClear();
   });
 
   test("should return 204 empty request object", async (): Promise<void> => {
@@ -78,4 +81,8 @@ describe("user test", (): void => {
 
     expect(res.send).toBeCalledWith({result: [{error: {code: 204, message: "Error:  "}, status: "failure"}]});
   });
+
+  // test("should return error to next middleware", async (): Promise<void> => {
+  //   expect(createUser).toThrow();
+  // });
 });
