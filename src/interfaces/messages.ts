@@ -1,13 +1,7 @@
 interface IErrorMessage {
-  result: IMessage[];
-}
-
-interface IMessage {
-  status: string;
-  error: {
-    code: number;
-    message: string;
-  };
+  statusCode: number;
+  message: string;
+  error: string;
 }
 
 export {IErrorMessage};

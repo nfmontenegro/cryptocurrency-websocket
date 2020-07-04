@@ -1,17 +1,14 @@
 import {IErrorMessage} from "../interfaces/messages";
 
-function errorResponseMessage(message: string, statusCode: number): IErrorMessage {
+function getErrorResponseMessage(
+  statusCode: number = 500,
+  message: string = "",
+  error: string = "Internal server error"
+): IErrorMessage {
   return {
-    result: [
-      {
-        status: "failure",
-        error: {
-          code: statusCode,
-          message: `Error:  ${message}`
-        }
-      }
-    ]
+    statusCode,
+    message,
+    error
   };
 }
-
-export default errorResponseMessage;
+export {getErrorResponseMessage};

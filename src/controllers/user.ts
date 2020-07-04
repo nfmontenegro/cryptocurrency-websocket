@@ -1,9 +1,10 @@
+import HttpStatus from "http-status-codes";
 import {Request, Response, NextFunction} from "express";
 import {sign} from "jsonwebtoken";
 
 import {SECRET} from "../config";
 import {IUser} from "../interfaces";
-import {logger, errorResponseMessage} from "../util";
+import {logger, getErrorResponseMessage} from "../util";
 import {findOne, create, getAll, update, hashPassword, comparePasswords} from "../lib";
 
 async function createUser(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
@@ -11,8 +12,7 @@ async function createUser(request: Request, response: Response, next: NextFuncti
     const user = request.body as IUser;
 
     if (!Object.keys(user).length) {
-      const responseMessage = errorResponseMessage("", 204);
-      return response.status(204).send(responseMessage);
+      throw getErrorResponseMessage(HttpStatus.NO_CONTENT, "", HttpStatus.getStatusText(HttpStatus.NO_CONTENT));
     }
 
     logger.debug("params to create user: ", user);
@@ -20,15 +20,18 @@ async function createUser(request: Request, response: Response, next: NextFuncti
     const userEmailExist = await findOne("User", "email", user.email);
 
     if (userEmailExist) {
-      const responseMessage = errorResponseMessage(`email ${user.email} already exists!`, 409);
-      return response.status(409).send(responseMessage);
+      throw getErrorResponseMessage(
+        HttpStatus.CONFLICT,
+        `Email ${user.email} already exist!`,
+        HttpStatus.getStatusText(HttpStatus.CONFLICT)
+      );
     }
 
     const hashedPassword = await hashPassword(user.password);
     const users = await create("User", {...user, password: hashedPassword});
     return response.status(201).send(users);
   } catch (err) {
-    return next(err.message);
+    return next(err);
   }
 }
 
@@ -37,30 +40,39 @@ async function getUsers(_request: Request, response: Response, next: NextFunctio
     const users = await getAll("User");
     return response.status(200).send(users);
   } catch (err) {
-    return next(err.message);
+    return next(err);
   }
 }
 
 async function updateUser(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
   try {
-    const userId = +req.params.userId;
+    const userId = Number(req.params.userId);
     if (!userId) {
-      return res.status(400).json({message: "Param resource not found"});
+      throw getErrorResponseMessage(
+        HttpStatus.BAD_REQUEST,
+        `Param resource not found`,
+        HttpStatus.getStatusText(HttpStatus.BAD_REQUEST)
+      );
     }
 
     const query = {
-      where: {id: userId}
+      where: {id: userId},
+      returning: true
     };
 
-    const user: IUser = await update("User", query, req.body);
+    const user = await update("User", query, req.body);
 
     if (user) {
       return res.status(200).json(user);
     } else {
-      return res.status(404).json({message: "User not found"});
+      throw getErrorResponseMessage(
+        HttpStatus.NOT_FOUND,
+        `User ${req.body.name} not found`,
+        HttpStatus.getStatusText(HttpStatus.NOT_FOUND)
+      );
     }
   } catch (err) {
-    return next(err.message);
+    return next(err);
   }
 }
 
@@ -72,23 +84,28 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
     const user = await findOne("User", "email", email);
 
     if (!user) {
-      const responseMessage = errorResponseMessage(`No such user found ${email}`, 400);
-      return res.status(400).send(responseMessage);
+      throw getErrorResponseMessage(
+        HttpStatus.BAD_REQUEST,
+        `No such user found ${email}`,
+        HttpStatus.getStatusText(HttpStatus.BAD_REQUEST)
+      );
     }
 
     const isValidPassword = await comparePasswords(password, user.password);
 
     if (!isValidPassword) {
-      const responseMessage = errorResponseMessage(`Invalid password`, 400);
-      return res.status(400).send(responseMessage);
+      throw getErrorResponseMessage(
+        HttpStatus.BAD_REQUEST,
+        "Invalid password",
+        HttpStatus.getStatusText(HttpStatus.BAD_REQUEST)
+      );
     }
 
     const token = sign({userId: user.id}, SECRET, {expiresIn: "1h"});
 
     return res.status(200).json({token, user});
   } catch (err) {
-    console.log(err);
-    return next(err.message);
+    return next(err);
   }
 }
 

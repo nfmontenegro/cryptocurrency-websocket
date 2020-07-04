@@ -82,7 +82,15 @@ describe("user test", (): void => {
     expect(res.send).toBeCalledWith({result: [{error: {code: 204, message: "Error:  "}, status: "failure"}]});
   });
 
-  // test("should return error to next middleware", async (): Promise<void> => {
-  //   expect(createUser).toThrow();
-  // });
+  test("should return 500 error", async (): Promise<void> => {
+    const mockFunction = jest.fn();
+    createUser.prototype = mockFunction;
+    mockFunction.mockRejectedValue("An error ocurred");
+
+    try {
+      await createUser(req, res, next);
+    } catch (e) {
+      expect(e).toBe("An Error Occurred");
+    }
+  });
 });
