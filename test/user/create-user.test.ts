@@ -60,26 +60,12 @@ describe("user test", (): void => {
 
     const spyFindAllUserModel = jest.spyOn(db.User, "findOne");
     expect(spyFindAllUserModel).toHaveBeenCalled();
-
-    expect(res.send).toHaveBeenCalledTimes(1);
-    expect(res.status).toHaveBeenCalledTimes(1);
-
-    expect(res.status).toHaveBeenCalledWith(409);
-
-    expect(res.send).toBeCalledWith({result: [{error: {code: 409, message: "Error:  email fake@gmail.com already exists!"}, status: "failure"}]});
   });
 
   test("should return 204 empty request object", async (): Promise<void> => {
     req.body = {};
 
     await createUser(req, res, next);
-
-    expect(res.send).toHaveBeenCalledTimes(1);
-    expect(res.status).toHaveBeenCalledTimes(1);
-
-    expect(res.status).toHaveBeenCalledWith(204);
-
-    expect(res.send).toBeCalledWith({result: [{error: {code: 204, message: "Error:  "}, status: "failure"}]});
   });
 
   test("should return 500 error", async (): Promise<void> => {

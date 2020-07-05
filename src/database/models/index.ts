@@ -17,15 +17,15 @@ const db: DB = {};
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 fs.readdirSync(__dirname)
-  .filter(file => {
+  .filter((file: string): boolean => {
     return file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js";
   })
-  .forEach(file => {
+  .forEach((file: string): void => {
     const model = sequelize.import(path.join(__dirname, file));
     db[model.name] = model;
   });
 // Important: creates associations based on associations defined in associate function in the model files
-Object.keys(db).forEach(modelName => {
+Object.keys(db).forEach((modelName: any): void => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }

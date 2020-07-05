@@ -6,16 +6,14 @@ jest.mock("../../src/util/logger", (): object => ({
   debug: jest.fn(),
   info: jest.fn()
 }));
-
-jest.mock("../../src/lib/bcrypt", (): object => ({
-  comparePasswords: jest.fn().mockReturnValue(false)
-}));
-
 jest.mock("../../src/database/models", (): object => ({
   User: {
-    findOne: jest.fn(),
-    create: jest.fn()
+    findOne: jest.fn()
   }
+}));
+
+jest.mock("../../src/lib/bcrypt", (): any => ({
+  comparePasswords: jest.fn().mockReturnValueOnce(false).mockReturnValueOnce(true)
 }));
 
 describe("login user test", (): void => {
@@ -29,23 +27,34 @@ describe("login user test", (): void => {
       password: "12345678"
     };
 
+    db.User.findOne.mockReturnValue(false);
     await login(req, res, next);
-
     const spyFindOneUserModel = jest.spyOn(db.User, "findOne");
     expect(spyFindOneUserModel).toHaveBeenCalled();
 
-    expect(res.send).toHaveBeenCalledTimes(1);
-    expect(res.status).toHaveBeenCalledTimes(1);
-
-    const responseMessage = {
-      result: [{error: {code: 400, message: "Error:  No such user found fake2@gmail.com"}, status: "failure"}]
-    };
-
-    expect(res.send).toBeCalledWith(responseMessage);
-    expect(res.status).toHaveBeenCalledWith(400);
+    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(next).toBeCalledWith({error: "Bad Request", message: "No such user found fake2@gmail.com", statusCode: 400});
   });
 
-  test("should return 400 invalid password", async (): Promise<void> => {
+  test("should return 400 wrong password", async (): Promise<void> => {
+    req.body = {
+      email: "fake2@gmail.com",
+      password: "12345678"
+    };
+
+    db.User.findOne.mockReturnValue(req.body);
+
+    await login(req, res, next);
+    const spyFindOneUserModel = jest.spyOn(db.User, "findOne");
+    expect(spyFindOneUserModel).toHaveBeenCalled();
+
+    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(next).toBeCalledWith({error: "Bad Request", message: "Invalid password", statusCode: 400});
+  });
+
+  test("should return 200 success login", async (): Promise<void> => {
     req.body = {
       email: "fake@gmail.com",
       password: "12345678"
@@ -60,11 +69,6 @@ describe("login user test", (): void => {
     expect(res.send).toHaveBeenCalledTimes(1);
     expect(res.status).toHaveBeenCalledTimes(1);
 
-    const responseMessage = {
-      result: [{error: {code: 400, message: "Error:  Invalid password"}, status: "failure"}]
-    };
-
-    expect(res.send).toBeCalledWith(responseMessage);
-    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.status).toHaveBeenCalledWith(200);
   });
 });

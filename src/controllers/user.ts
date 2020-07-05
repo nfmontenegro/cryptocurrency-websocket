@@ -3,16 +3,15 @@ import {Request, Response, NextFunction} from "express";
 import {sign} from "jsonwebtoken";
 
 import {SECRET} from "../config";
-import {IUser} from "../interfaces";
 import {logger, getErrorResponseMessage} from "../util";
 import {findOne, create, getAll, update, hashPassword, comparePasswords} from "../lib";
 
 async function createUser(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
   try {
-    const user = request.body as IUser;
+    const user = request.body;
 
     if (!Object.keys(user).length) {
-      throw getErrorResponseMessage(HttpStatus.NO_CONTENT, "", HttpStatus.getStatusText(HttpStatus.NO_CONTENT));
+      throw getErrorResponseMessage(HttpStatus.NO_CONTENT, undefined, HttpStatus.getStatusText(HttpStatus.NO_CONTENT));
     }
 
     logger.debug("params to create user: ", user);
@@ -63,14 +62,13 @@ async function updateUser(req: Request, res: Response, next: NextFunction): Prom
     const user = await update("User", query, req.body);
 
     if (user) {
-      return res.status(200).json(user);
-    } else {
-      throw getErrorResponseMessage(
-        HttpStatus.NOT_FOUND,
-        `User ${req.body.name} not found`,
-        HttpStatus.getStatusText(HttpStatus.NOT_FOUND)
-      );
+      return res.status(200).send(user);
     }
+    throw getErrorResponseMessage(
+      HttpStatus.NOT_FOUND,
+      `User ${req.body.name} not found`,
+      HttpStatus.getStatusText(HttpStatus.NOT_FOUND)
+    );
   } catch (err) {
     return next(err);
   }
@@ -82,7 +80,6 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
 
     const {password, email} = req.body;
     const user = await findOne("User", "email", email);
-
     if (!user) {
       throw getErrorResponseMessage(
         HttpStatus.BAD_REQUEST,
@@ -92,7 +89,6 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
     }
 
     const isValidPassword = await comparePasswords(password, user.password);
-
     if (!isValidPassword) {
       throw getErrorResponseMessage(
         HttpStatus.BAD_REQUEST,
@@ -103,7 +99,7 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
 
     const token = sign({userId: user.id}, SECRET, {expiresIn: "1h"});
 
-    return res.status(200).json({token, user});
+    return res.status(200).send({token, user});
   } catch (err) {
     return next(err);
   }
