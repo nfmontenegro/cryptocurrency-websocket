@@ -98,7 +98,6 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
     }
 
     const token = sign({userId: user.id}, SECRET, {expiresIn: "1h"});
-
     return res.status(200).send({token, user});
   } catch (err) {
     return next(err);
