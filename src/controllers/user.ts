@@ -17,7 +17,6 @@ async function createUser(request: Request, response: Response, next: NextFuncti
     logger.debug("params to create user: ", user);
 
     const userEmailExist = await findOne("User", "email", user.email);
-
     if (userEmailExist) {
       throw getErrorResponseMessage(
         HttpStatus.CONFLICT,
@@ -82,9 +81,9 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
     const user = await findOne("User", "email", email);
     if (!user) {
       throw getErrorResponseMessage(
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.NOT_FOUND,
         `No such user found ${email}`,
-        HttpStatus.getStatusText(HttpStatus.BAD_REQUEST)
+        HttpStatus.getStatusText(HttpStatus.NOT_FOUND)
       );
     }
 
