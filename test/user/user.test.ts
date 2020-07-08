@@ -1,5 +1,3 @@
-const jwt = require("jsonwebtoken");
-
 const mockUserData = require("../mocks/user");
 const logger = require("../../src/util/logger");
 const db = require("../../src/database/models");
@@ -71,8 +69,8 @@ describe("login user test", (): void => {
 
     db.User.findOne.mockReturnValueOnce(true);
     comparePasswords.mockReturnValue(true);
-    await login(req, res, next);
 
+    await login(req, res, next);
     const spyFindOneUserModel = jest.spyOn(db.User, "findOne");
     expect(spyFindOneUserModel).toHaveBeenCalled();
 
@@ -95,7 +93,7 @@ describe("login user test", (): void => {
   });
 });
 
-describe("user test", (): void => {
+describe("create user test", (): void => {
   afterEach((): void => {
     jest.clearAllMocks();
   });
@@ -132,6 +130,7 @@ describe("user test", (): void => {
       email: "fake@gmail.com",
       password: "12345678"
     };
+
     db.User.findOne.mockReturnValueOnce(true);
 
     await createUser(req, res, next);
@@ -141,12 +140,19 @@ describe("user test", (): void => {
 
     const spyFindAllUserModel = jest.spyOn(db.User, "findOne");
     expect(spyFindAllUserModel).toHaveBeenCalled();
+
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(next).toBeCalledWith({error: "Conflict", message: "Email fake@gmail.com already exist!", statusCode: 409});
   });
 
   test("should return 204 empty request object", async (): Promise<void> => {
     req.body = {};
 
     await createUser(req, res, next);
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(next).toBeCalledWith({error: "No Content", message: "", statusCode: 204});
   });
 
   test("should return 500 error", async (): Promise<void> => {

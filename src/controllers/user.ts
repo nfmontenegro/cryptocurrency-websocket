@@ -38,6 +38,7 @@ async function getUsers(_request: Request, response: Response, next: NextFunctio
     const users = await getAll("User");
     return response.status(200).send(users);
   } catch (err) {
+    console.log("@@@ DIE", err);
     return next(err);
   }
 }
