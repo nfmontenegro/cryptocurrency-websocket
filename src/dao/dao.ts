@@ -1,3 +1,5 @@
+import {Request} from "express";
+
 import db from "../database/models";
 import {IUser} from "../interfaces/models";
 
@@ -13,8 +15,11 @@ async function create(collection: string, params: IUser): Promise<IUser> {
   return db[collection].create(params);
 }
 
-async function getAll(collection: string): Promise<IUser> {
-  return db[collection].findAll();
+async function getAll(collection: string, request: Request): Promise<IUser> {
+  const {page, pageSize} = request.query;
+  const offset = page * pageSize;
+  const limit = pageSize;
+  return db[collection].findAll({limit, offset});
 }
 
 async function update(collection: string, query: any, body: IUser): Promise<IUser> {
