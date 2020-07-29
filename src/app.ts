@@ -3,7 +3,7 @@ import express, {Application} from "express";
 import cors from "cors";
 import morgan from "morgan";
 
-import {user} from "./routes";
+import userRoutes from "./routes/user";
 import {errorHandler} from "./middlewares";
 
 // Create Express server
@@ -23,7 +23,7 @@ app.use(
 /**
  * Primary app routes.
  */
-app.use("/api/v1", user);
+app.use("/api/v1", userRoutes);
 
 app.use(errorHandler);
 

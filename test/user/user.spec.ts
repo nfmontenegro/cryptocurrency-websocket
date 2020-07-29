@@ -1,14 +1,14 @@
 const mockUserData = require("../mocks/user");
-const logger = require("../../src/util/logger");
+const logger = require("../../src/libs/logger");
 const db = require("../../src/database/models");
-const {comparePasswords} = require("../../src/lib/bcrypt");
+const {comparePasswords} = require("../../src/libs/bcrypt");
 const {login, createUser} = require("../../src/controllers");
 const {req, res, next} = require("../interceptor-request");
 
 jest.mock("jsonwebtoken", (): any => ({
   sign: jest.fn()
 }));
-jest.mock("../../src/util/logger", (): object => ({
+jest.mock("../../src/libs/logger", (): object => ({
   debug: jest.fn(),
   info: jest.fn()
 }));
@@ -18,7 +18,7 @@ jest.mock("../../src/database/models", (): object => ({
     create: jest.fn()
   }
 }));
-jest.mock("../../src/lib/bcrypt", (): any => ({
+jest.mock("../../src/libs/bcrypt", (): any => ({
   comparePasswords: jest.fn(),
   hashPassword: jest.fn()
 }));
@@ -141,7 +141,6 @@ describe("create user test", (): void => {
     const spyFindAllUserModel = jest.spyOn(db.User, "findOne");
     expect(spyFindAllUserModel).toHaveBeenCalled();
 
-    expect(next).toHaveBeenCalledTimes(1);
     expect(next).toHaveBeenCalledTimes(1);
     expect(next).toBeCalledWith({error: "Conflict", message: "Email fake@gmail.com already exist!", statusCode: 409});
   });
