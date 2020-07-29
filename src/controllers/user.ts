@@ -41,9 +41,9 @@ async function createUser(request: Request, response: Response, next: NextFuncti
   }
 }
 
-async function getUsers(_request: Request, response: Response, next: NextFunction): Promise<Response | void> {
+async function getUsers(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
   try {
-    const users = await getAll("User");
+    const users = await getAll("User", request);
     return response.status(200).send(users);
   } catch (err) {
     console.log("@@@ DIE", err);
