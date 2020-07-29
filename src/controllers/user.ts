@@ -3,8 +3,16 @@ import {Request, Response, NextFunction} from "express";
 import {sign} from "jsonwebtoken";
 
 import {SECRET} from "../config";
-import {logger, getErrorResponseMessage} from "../util";
-import {findOne, create, getAll, update, hashPassword, comparePasswords} from "../lib";
+import {
+  findOne,
+  create,
+  getAll,
+  update,
+  hashPassword,
+  comparePasswords,
+  logger,
+  getErrorResponseMessage
+} from "../libs";
 
 async function createUser(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
   try {
