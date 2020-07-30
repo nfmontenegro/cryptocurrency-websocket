@@ -17,7 +17,7 @@ async function verifyToken(req: IRequest, _res: Response, next: NextFunction): P
       const bearer = bearerHeader.split(" ");
       const bearerToken = bearer[1];
       const {userId} = verify(bearerToken, SECRET) as ITokenData;
-      const user = await findOne("User", "id", userId);
+      const user = await findOne("id", userId);
       if (user) {
         req.user = user;
         next();

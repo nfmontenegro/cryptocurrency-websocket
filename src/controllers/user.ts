@@ -24,7 +24,7 @@ async function createUser(request: Request, response: Response, next: NextFuncti
 
     logger.debug("params to create user: ", user);
 
-    const userEmailExist = await findOne("User", "email", user.email);
+    const userEmailExist = await findOne("email", user.email);
     if (userEmailExist) {
       throw getErrorResponseMessage(
         HttpStatus.CONFLICT,
@@ -34,19 +34,18 @@ async function createUser(request: Request, response: Response, next: NextFuncti
     }
 
     const hashedPassword = await hashPassword(user.password);
-    const users = await create("User", {...user, password: hashedPassword});
+    const users = await create({...user, password: hashedPassword});
     return response.status(201).send(users);
   } catch (err) {
     return next(err);
   }
 }
 
-async function getUsers(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
+async function getUsers(_request: Request, response: Response, next: NextFunction): Promise<Response | void> {
   try {
-    const users = await getAll("User", request);
+    const users = await getAll();
     return response.status(200).send(users);
   } catch (err) {
-    console.log("@@@ DIE", err);
     return next(err);
   }
 }
@@ -67,7 +66,7 @@ async function updateUser(req: Request, res: Response, next: NextFunction): Prom
       returning: true
     };
 
-    const user = await update("User", query, req.body);
+    const user = await update(query, req.body);
 
     if (user) {
       return res.status(200).send(user);
@@ -87,7 +86,7 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
     logger.debug("params to login user: ", req.body.email);
 
     const {password, email} = req.body;
-    const user = await findOne("User", "email", email);
+    const user = await findOne("email", email);
     if (!user) {
       throw getErrorResponseMessage(
         HttpStatus.NOT_FOUND,
