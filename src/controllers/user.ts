@@ -3,16 +3,8 @@ import {Request, Response, NextFunction} from "express";
 import {sign} from "jsonwebtoken";
 
 import {SECRET} from "../config";
-import {
-  findOne,
-  create,
-  getAll,
-  update,
-  hashPassword,
-  comparePasswords,
-  logger,
-  getErrorResponseMessage
-} from "../libs";
+import {hashPassword, comparePasswords, logger, getErrorResponseMessage} from "../libs";
+import {findOne, create, getAll, update} from "../dao/user";
 
 async function createUser(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
   try {
@@ -44,7 +36,7 @@ async function createUser(request: Request, response: Response, next: NextFuncti
 async function getUsers(_request: Request, response: Response, next: NextFunction): Promise<Response | void> {
   try {
     const users = await getAll();
-    return response.status(200).send(users);
+    return response.status(200).send({result: users});
   } catch (err) {
     return next(err);
   }
