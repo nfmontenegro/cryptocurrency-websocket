@@ -33,11 +33,8 @@ jobs:
       run: |
         npm install
         npm audit fix
-    - name: Test with coverage
-      uses: ziishaned/jest-reporter-action@v0.0.1
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        test-command: "yarn jest --coverage"
+    - name: Tests
+      run: jest --verbose --coverage
 
     # - name: Initialize Google Cloud SDK
     #   uses: zxyle/publish-gae-action@master
