@@ -3,7 +3,8 @@ import HttpStatus from "http-status-codes";
 import {Response, NextFunction} from "express";
 
 import {SECRET} from "../config";
-import {findOne, getErrorResponseMessage} from "../libs";
+import {getErrorResponseMessage} from "../libs";
+import {findOne} from "../dao/user";
 import {IRequest, ITokenData, IErrorMessage} from "../interfaces";
 
 function responseMessage(code: number, message: string): IErrorMessage {
