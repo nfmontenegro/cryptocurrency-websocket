@@ -29,12 +29,17 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Build
+
+    - name: build, make test-coverage
       run: |
         npm install
         npm audit fix
-    - name: Tests
-      run: npm test
+        make test-coverage
+
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
 
     # - name: Initialize Google Cloud SDK
     #   uses: zxyle/publish-gae-action@master

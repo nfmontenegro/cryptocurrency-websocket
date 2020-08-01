@@ -24,6 +24,11 @@ jest.mock("../../src/libs/bcrypt", () => ({
   hashPassword: () => mockHashPassword()
 }));
 
+jest.mock("../../src/libs/logger", () => ({
+  info: () => jest.fn(),
+  debug: () => jest.fn()
+}));
+
 describe("getUsers controller", () => {
   afterEach(() => {
     mockGetAll.mockClear();
