@@ -30,11 +30,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: build, make test-coverage
+    - name: build and make test-coverage
       run: |
         npm install
         npm audit fix
-        make test-coverage
+        npm test
 
     - name: Coveralls
       uses: coverallsapp/github-action@master
