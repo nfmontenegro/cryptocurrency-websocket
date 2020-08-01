@@ -8,7 +8,7 @@ module.exports = {
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest"
   },
-  testPathIgnorePatterns: ["<rootDir>/src/middlewares", "<rootDir/src/lib", "<rootDir/src/util"],
+  testPathIgnorePatterns: ["<rootDir>/src/libs/secrets"],
   testMatch: ["<rootDir>/test/**/*.spec.(ts|js)"],
   testEnvironment: "node",
   clearMocks: true,
