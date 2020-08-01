@@ -8,7 +8,14 @@ module.exports = {
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest"
   },
-  testPathIgnorePatterns: ["<rootDir>/src/libs/secrets"],
+  collectCoverageFrom: [
+    "src/*.ts",
+    "src/**/*.ts",
+    "!src/database/*/*.ts",
+    "!src/middlewares/*.ts",
+    "!src/libs/*.ts",
+    "!src/dao/*.ts"
+  ],
   testMatch: ["<rootDir>/test/**/*.spec.(ts|js)"],
   testEnvironment: "node",
   clearMocks: true,
