@@ -1,15 +1,27 @@
-const {getUsers} = require("../../src/controllers/user");
+const {getUsers, login, updateUser, createUser} = require("../../src/controllers/user");
 
-const mockUsersData = require("./mocks/user");
 const {req, res, next} = require("./interceptor-request");
+const mockUsersData = require("./mocks/user");
 
-const mockGetUsers = jest.fn();
-// jest.mock("../../src/controllers/user", () => ({
-//   getUsers: () => mockGetUsers()
-// }));
 const mockGetAll = jest.fn();
+const mockFindOne = jest.fn();
+const mockUpdate = jest.fn();
+const mockCreate = jest.fn();
+const mockHashPassword = jest.fn();
+const mockComparePasswords = jest.fn();
+
+jest.mock("jsonwebtoken");
+
 jest.mock("../../src/dao/user", () => ({
-  getAll: () => mockGetAll()
+  getAll: () => mockGetAll(),
+  findOne: () => mockFindOne(),
+  update: () => mockUpdate(),
+  create: () => mockCreate()
+}));
+
+jest.mock("../../src/libs/bcrypt", () => ({
+  comparePasswords: () => mockComparePasswords(),
+  hashPassword: () => mockHashPassword()
 }));
 
 describe("getUsers controller", () => {
@@ -20,6 +32,9 @@ describe("getUsers controller", () => {
   it("should return success response 200", async () => {
     mockGetAll.mockResolvedValue(mockUsersData);
     await getUsers(req, res, next);
+
+    expect(mockGetAll).toHaveBeenCalled();
+    expect(mockGetAll).toHaveBeenCalledTimes(1);
 
     expect(res.send).toHaveBeenCalled();
     expect(res.send).toHaveBeenCalledTimes(1);
@@ -33,6 +48,299 @@ describe("getUsers controller", () => {
   it("should return error message if get user controllers is failed", async () => {
     mockGetAll.mockRejectedValue("An error ocurred");
     await getUsers(req, res, next);
+
+    expect(mockGetAll).toHaveBeenCalled();
+    expect(mockGetAll).toHaveBeenCalledTimes(1);
+
+    expect(res.send).not.toHaveBeenCalled();
+    expect(res.send).toHaveBeenCalledTimes(0);
+
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledTimes(0);
+
+    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("login controller", () => {
+  it("should return success message if login is succcess", async () => {
+    const user = mockUsersData.usersData[0];
+    mockFindOne.mockResolvedValue(user);
+    mockComparePasswords.mockResolvedValue(true);
+    req.body = {
+      email: "X",
+      password: "X"
+    };
+
+    await login(req, res, next);
+
+    expect(mockFindOne).toHaveBeenCalled();
+    expect(mockFindOne).toHaveBeenCalledTimes(1);
+
+    expect(mockComparePasswords).toHaveBeenCalled();
+    expect(mockComparePasswords).toHaveBeenCalledTimes(1);
+
+    expect(res.send).toHaveBeenCalled();
+    expect(res.send).toHaveBeenCalledTimes(1);
+    expect(res.send).toHaveBeenCalledWith({result: {user}});
+
+    expect(res.status).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it("should call next middleware when user email don't exist", async () => {
+    mockFindOne.mockResolvedValue(false);
+
+    req.body = {
+      email: "X",
+      password: "X"
+    };
+
+    await login(req, res, next);
+
+    expect(mockFindOne).toHaveBeenCalled();
+    expect(mockFindOne).toHaveBeenCalledTimes(1);
+
+    expect(mockComparePasswords).not.toHaveBeenCalled();
+    expect(mockComparePasswords).toHaveBeenCalledTimes(0);
+
+    expect(res.send).not.toHaveBeenCalled();
+    expect(res.status).not.toHaveBeenCalled();
+
+    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it("should call next middleware when user password is not valid", async () => {
+    mockFindOne.mockResolvedValue(true);
+    mockComparePasswords.mockResolvedValue(false);
+
+    req.body = {
+      email: "X",
+      password: "X"
+    };
+
+    await login(req, res, next);
+
+    expect(mockFindOne).toHaveBeenCalled();
+    expect(mockFindOne).toHaveBeenCalledTimes(1);
+
+    expect(mockComparePasswords).toHaveBeenCalled();
+    expect(mockComparePasswords).toHaveBeenCalledTimes(1);
+
+    expect(res.send).not.toHaveBeenCalled();
+    expect(res.status).not.toHaveBeenCalled();
+
+    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it("should return error message if find one is failed", async () => {
+    mockFindOne.mockRejectedValue("An error ocurred");
+    await login(req, res, next);
+
+    expect(mockFindOne).toHaveBeenCalled();
+    expect(mockFindOne).toHaveBeenCalledTimes(1);
+
+    expect(mockComparePasswords).not.toHaveBeenCalled();
+    expect(mockComparePasswords).toHaveBeenCalledTimes(0);
+
+    expect(res.send).not.toHaveBeenCalled();
+    expect(res.send).toHaveBeenCalledTimes(0);
+
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledTimes(0);
+
+    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it("should return error message if comparePasswords is failed", async () => {
+    mockFindOne.mockResolvedValue(true);
+    mockComparePasswords.mockRejectedValue(false);
+    await login(req, res, next);
+
+    expect(mockFindOne).toHaveBeenCalled();
+    expect(mockFindOne).toHaveBeenCalledTimes(1);
+
+    expect(mockComparePasswords).toHaveBeenCalled();
+    expect(mockComparePasswords).toHaveBeenCalledTimes(1);
+
+    expect(res.send).not.toHaveBeenCalled();
+    expect(res.send).toHaveBeenCalledTimes(0);
+
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledTimes(0);
+
+    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("update controller", () => {
+  it("should return success message if update user is succcess", async () => {
+    const user = mockUsersData.usersData[0];
+    mockUpdate.mockResolvedValue(user);
+
+    req.params = {
+      userId: "1"
+    };
+    req.body = {
+      email: "X",
+      password: "X"
+    };
+
+    await updateUser(req, res, next);
+
+    expect(mockUpdate).toHaveBeenCalled();
+    expect(mockUpdate).toHaveBeenCalledTimes(1);
+
+    expect(res.send).toHaveBeenCalled();
+    expect(res.send).toHaveBeenCalledTimes(1);
+    expect(res.send).toHaveBeenCalledWith({result: {user}});
+
+    expect(res.status).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it("should return error when params is not a number", async () => {
+    mockUpdate.mockResolvedValue(false);
+
+    req.params = {
+      userId: "X"
+    };
+    req.body = {
+      email: "X",
+      password: "X"
+    };
+
+    await updateUser(req, res, next);
+
+    expect(mockUpdate).not.toHaveBeenCalled();
+    expect(mockUpdate).toHaveBeenCalledTimes(0);
+
+    expect(res.send).not.toHaveBeenCalled();
+    expect(res.send).toHaveBeenCalledTimes(0);
+
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledTimes(0);
+
+    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it("should return error when try update and can't find the user", async () => {
+    mockUpdate.mockResolvedValue(false);
+
+    req.params = {
+      userId: "1"
+    };
+    req.body = {
+      email: "X",
+      password: "X"
+    };
+
+    await updateUser(req, res, next);
+
+    expect(mockUpdate).toHaveBeenCalled();
+    expect(mockUpdate).toHaveBeenCalledTimes(1);
+
+    expect(res.send).not.toHaveBeenCalled();
+    expect(res.send).toHaveBeenCalledTimes(0);
+
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledTimes(0);
+
+    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it("should return error if updated controller is failed", async () => {
+    mockUpdate.mockRejectedValue("An error ocurred");
+    await updateUser(req, res, next);
+
+    expect(mockUpdate).toHaveBeenCalled();
+    expect(mockUpdate).toHaveBeenCalledTimes(1);
+
+    expect(res.send).not.toHaveBeenCalled();
+    expect(res.send).toHaveBeenCalledTimes(0);
+
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledTimes(0);
+
+    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("create controller", () => {
+  it("should return success message if create is succcess", async () => {
+    const user = mockUsersData.usersData[0];
+    mockFindOne.mockResolvedValue(false);
+    mockCreate.mockResolvedValue(user);
+    mockHashPassword.mockResolvedValue(user.password);
+
+    req.body = {
+      email: "X",
+      password: "X"
+    };
+
+    await createUser(req, res, next);
+
+    expect(mockCreate).toHaveBeenCalled();
+    expect(mockCreate).toHaveBeenCalledTimes(1);
+
+    expect(mockFindOne).toHaveBeenCalled();
+    expect(mockFindOne).toHaveBeenCalledTimes(1);
+
+    expect(res.send).toHaveBeenCalled();
+    expect(res.send).toHaveBeenCalledTimes(1);
+    expect(res.send).toHaveBeenCalledWith({result: user});
+
+    expect(res.status).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(201);
+  });
+
+  it("should return error message if dont send body request", async () => {
+    req.body = {};
+
+    await createUser(req, res, next);
+
+    expect(mockCreate).not.toHaveBeenCalled();
+    expect(mockCreate).toHaveBeenCalledTimes(0);
+
+    expect(mockFindOne).not.toHaveBeenCalled();
+    expect(mockFindOne).toHaveBeenCalledTimes(0);
+
+    expect(res.send).not.toHaveBeenCalled();
+    expect(res.send).toHaveBeenCalledTimes(0);
+
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledTimes(0);
+
+    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it("should return error message if email already exist", async () => {
+    mockFindOne.mockResolvedValue(true);
+
+    req.body = {
+      email: "X",
+      password: "X"
+    };
+
+    await createUser(req, res, next);
+
+    expect(mockFindOne).toHaveBeenCalled();
+    expect(mockFindOne).toHaveBeenCalledTimes(1);
+
+    expect(mockCreate).not.toHaveBeenCalled();
+    expect(mockCreate).toHaveBeenCalledTimes(0);
 
     expect(res.send).not.toHaveBeenCalled();
     expect(res.send).toHaveBeenCalledTimes(0);

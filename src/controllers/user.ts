@@ -27,7 +27,7 @@ async function createUser(request: Request, response: Response, next: NextFuncti
 
     const hashedPassword = await hashPassword(user.password);
     const users = await create({...user, password: hashedPassword});
-    return response.status(201).send(users);
+    return response.status(201).send({result: users});
   } catch (err) {
     return next(err);
   }
@@ -45,6 +45,7 @@ async function getUsers(_request: Request, response: Response, next: NextFunctio
 async function updateUser(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
   try {
     const userId = Number(req.params.userId);
+
     if (!userId) {
       throw getErrorResponseMessage(
         HttpStatus.BAD_REQUEST,
@@ -61,7 +62,7 @@ async function updateUser(req: Request, res: Response, next: NextFunction): Prom
     const user = await update(query, req.body);
 
     if (user) {
-      return res.status(200).send(user);
+      return res.status(200).send({result: {user}});
     }
     throw getErrorResponseMessage(
       HttpStatus.NOT_FOUND,
@@ -97,7 +98,12 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
     }
 
     const token = sign({userId: user.id}, SECRET, {expiresIn: "1h"});
-    return res.status(200).send({token, user});
+    return res.status(200).send({
+      result: {
+        token,
+        user
+      }
+    });
   } catch (err) {
     return next(err);
   }
