@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Post = sequelize.define(
-    'Post',
+    "Post",
     {
       title: DataTypes.INTEGER,
       content: DataTypes.TEXT,
@@ -11,15 +11,15 @@ module.exports = (sequelize, DataTypes) => {
   Post.associate = models => {
     // associations can be defined here
     Post.hasMany(models.Comment, {
-      foreignKey: 'postId',
-      as: 'comments',
-      onDelete: 'CASCADE'
+      foreignKey: "postId",
+      as: "comments",
+      onDelete: "CASCADE"
     });
 
     Post.belongsTo(models.User, {
-      foreignKey: 'userId',
-      as: 'author',
-      onDelete: 'CASCADE'
+      foreignKey: "userId",
+      as: "author",
+      onDelete: "CASCADE"
     });
   };
   return Post;
