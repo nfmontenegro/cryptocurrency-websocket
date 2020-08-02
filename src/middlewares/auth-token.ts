@@ -14,16 +14,21 @@ function responseMessage(code: number, message: string): IErrorMessage {
 async function verifyToken(req: IRequest, _res: Response, next: NextFunction): Promise<void> {
   try {
     const bearerHeader = req.headers["authorization"];
+
     if (typeof bearerHeader !== "undefined") {
       const bearer = bearerHeader.split(" ");
       const bearerToken = bearer[1];
       const {userId} = verify(bearerToken, SECRET) as ITokenData;
-      const user = await findOne("id", userId);
-      if (user) {
-        req.user = user;
-        next();
+      if (userId) {
+        const user = await findOne("id", userId);
+        if (user) {
+          req.user = user;
+          next();
+        } else {
+          next(responseMessage(401, "Does not have access rights to the content"));
+        }
       } else {
-        next(responseMessage(401, "Does not have access rights to the content"));
+        next(responseMessage(401, "Token error"));
       }
     } else {
       next(responseMessage(403, "Does not have access rights to the content"));

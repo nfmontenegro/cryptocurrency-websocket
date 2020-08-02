@@ -1,4 +1,4 @@
-const {getUsers, login, updateUser, createUser} = require("../../src/controllers/user");
+const {getUsers, login, updateUser, createUser} = require("../../src/controllers");
 
 const {req, res, next} = require("./interceptor-request");
 const mockUsersData = require("./mocks/user");
