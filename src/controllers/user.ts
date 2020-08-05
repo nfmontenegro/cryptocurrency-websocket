@@ -3,8 +3,9 @@ import {Request, Response, NextFunction} from "express";
 import {sign} from "jsonwebtoken";
 
 import {SECRET} from "../config";
-import {hashPassword, comparePasswords, logger, getErrorResponseMessage} from "../libs";
+import {IRequest} from "../interfaces";
 import {findOne, create, getAll, update} from "../dao/user";
+import {hashPassword, comparePasswords, logger, getErrorResponseMessage} from "../libs";
 
 async function createUser(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
   try {
@@ -105,8 +106,18 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
       }
     });
   } catch (err) {
+    console.log("error main:", err);
     return next(err);
   }
 }
 
-export {createUser, getUsers, login, updateUser};
+async function getProfile(req: IRequest, res: Response, next: NextFunction): Promise<Response | void> {
+  try {
+    logger.debug("get user profile by: ", req.user);
+    return res.status(200).send({result: req.user});
+  } catch (err) {
+    return next(err);
+  }
+}
+
+export {createUser, getUsers, login, updateUser, getProfile};
