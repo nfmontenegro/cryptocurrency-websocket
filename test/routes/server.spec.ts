@@ -29,7 +29,7 @@ describe("GetUsers router", () => {
   it("should response forbidden 403", async () => {
     const res = await request(app).get("/api/v1/users");
 
-    expect(res.statusCode).toEqual(403);
+    expect(res.statusCode).toEqual(401);
     expect(res.ok).toBe(false);
     expect(res.type).toEqual("application/json");
   });
