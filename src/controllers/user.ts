@@ -34,11 +34,14 @@ async function createUser(request: Request, response: Response, next: NextFuncti
   }
 }
 
-async function getUsers(_request: Request, response: Response, next: NextFunction): Promise<Response | void> {
+async function getUsers(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
   try {
-    const users = await getAll();
+    const limit = Number(request.query.limit) || 2;
+    const offset = Number(request.query.offset) || 0;
+    const users = await getAll(limit, offset);
     return response.status(200).send({result: users});
   } catch (err) {
+    console.log("@@ error user", err);
     return next(err);
   }
 }

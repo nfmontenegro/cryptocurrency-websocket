@@ -13,8 +13,8 @@ async function create(params: IUser): Promise<IUser> {
   return db.User.create(params);
 }
 
-async function getAll(): Promise<any> {
-  return db.User.findAll();
+async function getAll(limit: number, offset: number): Promise<any> {
+  return db.User.findAll({limit, offset});
 }
 
 async function update(query: any, body: IUser): Promise<IUser> {
