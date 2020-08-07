@@ -36,6 +36,10 @@ describe("getUsers controller", () => {
 
   it("should return success response 200", async () => {
     mockGetAll.mockResolvedValue(mockUsersData);
+    req.query = {
+      limit: 1,
+      offset: 0
+    };
     await getUsers(req, res, next);
 
     expect(mockGetAll).toHaveBeenCalled();
