@@ -41,7 +41,6 @@ async function getUsers(request: Request, response: Response, next: NextFunction
     const users = await getAll(limit, offset);
     return response.status(200).send({result: users});
   } catch (err) {
-    console.log("@@ error user", err);
     return next(err);
   }
 }
@@ -109,7 +108,6 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
       }
     });
   } catch (err) {
-    console.log("error main:", err);
     return next(err);
   }
 }
