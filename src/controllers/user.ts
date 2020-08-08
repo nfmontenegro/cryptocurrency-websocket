@@ -39,7 +39,7 @@ async function getUsers(request: Request, response: Response, next: NextFunction
     const limit = Number(request.query.limit) || 2;
     const offset = Number(request.query.offset) || 0;
     const users = await getAll(limit, offset);
-    return response.status(200).send({result: users});
+    return response.status(200).send({result: {users, limit, offset}});
   } catch (err) {
     return next(err);
   }
@@ -108,6 +108,7 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
       }
     });
   } catch (err) {
+    console.log("@@@ error main:", err);
     return next(err);
   }
 }
