@@ -1,7 +1,7 @@
 const {getUsers, login, updateUser, createUser} = require("../../src/controllers");
 
-const {req, res, next} = require("./interceptor-request");
-const mockUsersData = require("./mocks/user");
+const {req, res, next} = require("../interceptor-request");
+const mockUsersData = require("../mocks/user");
 
 const mockGetAll = jest.fn();
 const mockFindOne = jest.fn();
@@ -29,7 +29,7 @@ jest.mock("../../src/libs/logger", () => ({
   debug: () => jest.fn()
 }));
 
-describe("getUsers controller", () => {
+describe("GetUsers controller", () => {
   afterEach(() => {
     mockGetAll.mockClear();
   });
@@ -47,7 +47,7 @@ describe("getUsers controller", () => {
 
     expect(res.send).toHaveBeenCalled();
     expect(res.send).toHaveBeenCalledTimes(1);
-    expect(res.send).toHaveBeenCalledWith({result: mockUsersData});
+    expect(res.send).toHaveBeenCalledWith({result: {users: mockUsersData, limit: 1, offset: 0}});
 
     expect(res.status).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledTimes(1);
@@ -72,7 +72,11 @@ describe("getUsers controller", () => {
   });
 });
 
-describe("login controller", () => {
+describe("Login controller", () => {
+  afterEach(() => {
+    mockGetAll.mockClear();
+  });
+
   it("should return success message if login is succcess", async () => {
     const user = mockUsersData.usersData[0];
     mockFindOne.mockResolvedValue(user);
@@ -188,7 +192,11 @@ describe("login controller", () => {
   });
 });
 
-describe("update controller", () => {
+describe("Update controller", () => {
+  afterEach(() => {
+    mockGetAll.mockClear();
+  });
+
   it("should return success message if update user is succcess", async () => {
     const user = mockUsersData.usersData[0];
     mockUpdate.mockResolvedValue(user);
@@ -285,7 +293,11 @@ describe("update controller", () => {
   });
 });
 
-describe("create controller", () => {
+describe("Create controller", () => {
+  afterEach(() => {
+    mockGetAll.mockClear();
+  });
+
   it("should return success message if create is succcess", async () => {
     const user = mockUsersData.usersData[0];
     mockFindOne.mockResolvedValue(false);
