@@ -59,6 +59,7 @@ describe("GetUsers router", () => {
 
   it("should response unauthorized 401", async () => {
     mockFindOne.mockResolvedValue(false);
+
     const res = await request(app).get("/api/v1/users").set({authorization: "Bearer X"});
 
     expect(res.statusCode).toEqual(401);
@@ -87,6 +88,7 @@ describe("Login router", () => {
 
   it("should return 404 if the users is not found", async () => {
     mockFindOne.mockResolvedValue(false);
+
     const res = await request(app).post("/api/v1/login").send({email: "X", password: "X"});
 
     expect(res.statusCode).toEqual(404);
@@ -100,6 +102,7 @@ describe("Login router", () => {
   it("should return 400 if the password are not valid", async () => {
     mockFindOne.mockResolvedValue(true);
     mockComparePasswords.mockResolvedValue(false);
+
     const res = await request(app).post("/api/v1/login").send({email: "X", password: "X"});
 
     expect(res.statusCode).toEqual(400);
@@ -119,6 +122,7 @@ describe("Login router", () => {
     mockVerifyToken.mockReturnValue(
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
     );
+
     const res = await request(app).post("/api/v1/login").send({email: "X", password: "X"});
 
     expect(res.statusCode).toBe(200);

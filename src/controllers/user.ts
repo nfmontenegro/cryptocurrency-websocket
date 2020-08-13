@@ -90,7 +90,6 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
         HttpStatus.getStatusText(HttpStatus.NOT_FOUND)
       );
     }
-
     const isValidPassword = await comparePasswords(password, user.password);
     if (!isValidPassword) {
       throw getErrorResponseMessage(
@@ -108,7 +107,6 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
       }
     });
   } catch (err) {
-    console.log("@@@ error main:", err);
     return next(err);
   }
 }
