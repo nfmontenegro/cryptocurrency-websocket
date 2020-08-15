@@ -2,10 +2,15 @@ const UserModel = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",
     {
-      id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+      uuid: {
+        type: DataTypes.STRING(36),
+        primaryKey: true,
+        allowNull: false,
+        validate: {
+          isUUID: 4,
+          notEmpty: true
+        },
+        defaultValue: DataTypes.UUIDV4
       },
       name: {
         type: DataTypes.STRING,

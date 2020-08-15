@@ -3,12 +3,12 @@ import HttpStatus from "http-status-codes";
 import {Response, NextFunction} from "express";
 
 import {SECRET} from "../config";
-import {getErrorResponseMessage} from "../libs";
+import {errorMessage} from "../libs";
 import {findOne} from "../dao/user";
 import {IRequest, ITokenData, IErrorMessage} from "../interfaces";
 
 function responseMessage(code: number, message: string): IErrorMessage {
-  return getErrorResponseMessage(code, message, HttpStatus.getStatusText(code));
+  return errorMessage(code, message, HttpStatus.getStatusText(code));
 }
 
 async function verifyToken(req: IRequest, _res: Response, next: NextFunction): Promise<void> {
@@ -22,7 +22,7 @@ async function verifyToken(req: IRequest, _res: Response, next: NextFunction): P
       const {userId} = verify(bearerToken, SECRET) as ITokenData;
 
       if (userId) {
-        const user = await findOne("id", userId);
+        const user = await findOne("uuid", userId);
         if (user) {
           req.user = user;
           next();

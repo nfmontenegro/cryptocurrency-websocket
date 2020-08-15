@@ -4,6 +4,7 @@ import cors from "cors";
 import morgan from "morgan";
 
 import userRoutes from "./routes/user";
+import postRoutes from "./routes/post";
 import {errorHandler} from "./middlewares";
 
 // Create Express server
@@ -24,6 +25,7 @@ app.use(
  * Primary app routes.
  */
 app.use("/api/v1", userRoutes);
+app.use("/api/v1", postRoutes);
 
 app.use(errorHandler);
 

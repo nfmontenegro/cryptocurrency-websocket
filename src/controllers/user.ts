@@ -5,21 +5,21 @@ import {sign} from "jsonwebtoken";
 import {SECRET} from "../config";
 import {IRequest} from "../interfaces";
 import {findOne, create, getAll, update} from "../dao/user";
-import {hashPassword, comparePasswords, logger, getErrorResponseMessage} from "../libs";
+import {hashPassword, comparePasswords, logger, errorMessage} from "../libs";
 
 async function createUser(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
   try {
     const user = request.body;
 
     if (!Object.keys(user).length) {
-      throw getErrorResponseMessage(HttpStatus.NO_CONTENT, undefined, HttpStatus.getStatusText(HttpStatus.NO_CONTENT));
+      throw errorMessage(HttpStatus.NO_CONTENT, undefined, HttpStatus.getStatusText(HttpStatus.NO_CONTENT));
     }
 
     logger.debug("params to create user: ", user);
 
     const userEmailExist = await findOne("email", user.email);
     if (userEmailExist) {
-      throw getErrorResponseMessage(
+      throw errorMessage(
         HttpStatus.CONFLICT,
         `Email ${user.email} already exist!`,
         HttpStatus.getStatusText(HttpStatus.CONFLICT)
@@ -50,7 +50,7 @@ async function updateUser(req: Request, res: Response, next: NextFunction): Prom
     const userId = Number(req.params.userId);
 
     if (!userId) {
-      throw getErrorResponseMessage(
+      throw errorMessage(
         HttpStatus.BAD_REQUEST,
         `Param resource not found`,
         HttpStatus.getStatusText(HttpStatus.BAD_REQUEST)
@@ -66,12 +66,13 @@ async function updateUser(req: Request, res: Response, next: NextFunction): Prom
 
     if (user) {
       return res.status(200).send({result: {user}});
+    } else {
+      throw errorMessage(
+        HttpStatus.NOT_FOUND,
+        `User ${req.body.name} not found`,
+        HttpStatus.getStatusText(HttpStatus.NOT_FOUND)
+      );
     }
-    throw getErrorResponseMessage(
-      HttpStatus.NOT_FOUND,
-      `User ${req.body.name} not found`,
-      HttpStatus.getStatusText(HttpStatus.NOT_FOUND)
-    );
   } catch (err) {
     return next(err);
   }
@@ -79,12 +80,12 @@ async function updateUser(req: Request, res: Response, next: NextFunction): Prom
 
 async function login(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
   try {
-    logger.debug("params to login user: ", req.body.email);
+    logger.debug("login user: ", req.body.email);
 
     const {password, email} = req.body;
     const user = await findOne("email", email);
     if (!user) {
-      throw getErrorResponseMessage(
+      throw errorMessage(
         HttpStatus.NOT_FOUND,
         `No such user found ${email}`,
         HttpStatus.getStatusText(HttpStatus.NOT_FOUND)
@@ -92,14 +93,10 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
     }
     const isValidPassword = await comparePasswords(password, user.password);
     if (!isValidPassword) {
-      throw getErrorResponseMessage(
-        HttpStatus.BAD_REQUEST,
-        "Invalid password",
-        HttpStatus.getStatusText(HttpStatus.BAD_REQUEST)
-      );
+      throw errorMessage(HttpStatus.BAD_REQUEST, "Invalid password", HttpStatus.getStatusText(HttpStatus.BAD_REQUEST));
     }
 
-    const token = sign({userId: user.id}, SECRET, {expiresIn: "1h"});
+    const token = sign({userId: user.uuid}, SECRET, {expiresIn: "1h"});
     return res.status(200).send({
       result: {
         token,

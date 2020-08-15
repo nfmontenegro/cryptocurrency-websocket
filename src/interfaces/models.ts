@@ -1,5 +1,5 @@
 interface IUser {
-  id: number;
+  uuid: string;
   email: string;
   password: string;
   name: string;

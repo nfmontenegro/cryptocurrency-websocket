@@ -13,7 +13,8 @@
         "lint": "tslint --project tsconfig.json",
         "test": "jest --verbose --coverage --runInBand",
         "test-watch": "jest --watch",
-        "migrations": "sequelize db:migrate"
+        "migration": "sequelize db:migrate",
+        "make:migration": "sequelize migration:generate --name"
     },
     "dependencies": {
         "bcrypt-nodejs": "^0.0.3",

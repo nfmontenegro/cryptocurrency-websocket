@@ -1,6 +1,6 @@
 import {IErrorMessage} from "../interfaces/messages";
 
-function getErrorResponseMessage(
+function errorMessage(
   statusCode: number = 500,
   message: string = "",
   error: string = "Internal server error"
@@ -11,4 +11,4 @@ function getErrorResponseMessage(
     error
   };
 }
-export {getErrorResponseMessage};
+export {errorMessage};
