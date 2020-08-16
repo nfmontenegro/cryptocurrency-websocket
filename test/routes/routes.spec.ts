@@ -13,7 +13,7 @@ jest.mock("jsonwebtoken", () => ({
   sign: jest.fn()
 }));
 
-jest.mock("../../src/dao/user", () => ({
+jest.mock("../../src/dao", () => ({
   getAll: () => mockGetAll(),
   findOne: () => mockFindOne()
 }));

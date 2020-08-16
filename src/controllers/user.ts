@@ -2,9 +2,9 @@ import HttpStatus from "http-status-codes";
 import {Request, Response, NextFunction} from "express";
 import {sign} from "jsonwebtoken";
 
-import {SECRET} from "../config";
+import {SECRET, MODELS} from "../config";
 import {IRequest} from "../interfaces";
-import {findOne, create, getAll, update} from "../dao/user";
+import {findOne, create, getAll, update} from "../dao";
 import {hashPassword, comparePasswords, logger, errorMessage} from "../libs";
 
 async function createUser(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
@@ -17,7 +17,7 @@ async function createUser(request: Request, response: Response, next: NextFuncti
 
     logger.debug("params to create user: ", user);
 
-    const userEmailExist = await findOne("email", user.email);
+    const userEmailExist = await findOne(MODELS.USER, "email", user.email);
     if (userEmailExist) {
       throw errorMessage(
         HttpStatus.CONFLICT,
@@ -27,7 +27,7 @@ async function createUser(request: Request, response: Response, next: NextFuncti
     }
 
     const hashedPassword = await hashPassword(user.password);
-    const users = await create({...user, password: hashedPassword});
+    const users = await create(MODELS.USER, {...user, password: hashedPassword});
     return response.status(201).send({result: users});
   } catch (err) {
     return next(err);
@@ -38,7 +38,7 @@ async function getUsers(request: Request, response: Response, next: NextFunction
   try {
     const limit = Number(request.query.limit) || 2;
     const offset = Number(request.query.offset) || 0;
-    const users = await getAll(limit, offset);
+    const users = await getAll(MODELS.USER, limit, offset);
     return response.status(200).send({result: {users, limit, offset}});
   } catch (err) {
     return next(err);
@@ -62,7 +62,7 @@ async function updateUser(req: Request, res: Response, next: NextFunction): Prom
       returning: true
     };
 
-    const user = await update(query, req.body);
+    const user = await update(MODELS.USER, query, req.body);
 
     if (user) {
       return res.status(200).send({result: {user}});
@@ -83,7 +83,7 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
     logger.debug("login user: ", req.body.email);
 
     const {password, email} = req.body;
-    const user = await findOne("email", email);
+    const user = await findOne(MODELS.USER, "email", email);
     if (!user) {
       throw errorMessage(
         HttpStatus.NOT_FOUND,

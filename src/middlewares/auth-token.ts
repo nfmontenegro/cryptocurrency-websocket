@@ -2,9 +2,9 @@ import {verify} from "jsonwebtoken";
 import HttpStatus from "http-status-codes";
 import {Response, NextFunction} from "express";
 
-import {SECRET} from "../config";
+import {SECRET, MODELS} from "../config";
 import {errorMessage} from "../libs";
-import {findOne} from "../dao/user";
+import {findOne} from "../dao";
 import {IRequest, ITokenData, IErrorMessage} from "../interfaces";
 
 function responseMessage(code: number, message: string): IErrorMessage {
@@ -22,7 +22,7 @@ async function verifyToken(req: IRequest, _res: Response, next: NextFunction): P
       const {userId} = verify(bearerToken, SECRET) as ITokenData;
 
       if (userId) {
-        const user = await findOne("uuid", userId);
+        const user = await findOne(MODELS.USER, "uuid", userId);
         if (user) {
           req.user = user;
           next();

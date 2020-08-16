@@ -6,4 +6,11 @@ interface IUser {
   lastname: string;
 }
 
-export {IUser};
+interface IPost {
+  uuid: string;
+  title: string;
+  content: string;
+  userId: string;
+}
+
+export {IUser, IPost};

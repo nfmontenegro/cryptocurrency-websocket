@@ -12,7 +12,7 @@ const mockComparePasswords = jest.fn();
 
 jest.mock("jsonwebtoken");
 
-jest.mock("../../src/dao/user", () => ({
+jest.mock("../../src/dao", () => ({
   getAll: () => mockGetAll(),
   findOne: () => mockFindOne(),
   update: () => mockUpdate(),
