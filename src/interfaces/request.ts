@@ -2,7 +2,7 @@ import {Request} from "express";
 import {IUser} from "./models";
 
 interface IRequest extends Request {
-  user: IUser;
+  locals: {user: IUser};
 }
 
 export {IRequest};

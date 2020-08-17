@@ -1,4 +1,5 @@
-const {getUsers, login, updateUser, createUser} = require("../../src/controllers");
+const {getUsers, login, updateUser, createUser, getProfile} = require("../../src/controllers");
+// const db = require("../../src/database/models");
 
 const {req, res, next} = require("../interceptor-request");
 const mockUsersData = require("../mocks/user");
@@ -12,11 +13,12 @@ const mockComparePasswords = jest.fn();
 
 jest.mock("jsonwebtoken");
 
-jest.mock("../../src/dao", () => ({
-  getAll: () => mockGetAll(),
-  findOne: () => mockFindOne(),
-  update: () => mockUpdate(),
-  create: () => mockCreate()
+jest.mock("../../src/database/models", () => ({
+  db: {
+    User: {
+      findAll: () => mockGetAll()
+    }
+  }
 }));
 
 jest.mock("../../src/libs/bcrypt", () => ({
@@ -371,5 +373,19 @@ describe("Create controller", () => {
 
     expect(next).toHaveBeenCalled();
     expect(next).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("GetProfile controller", () => {
+  afterEach(() => {
+    mockGetAll.mockClear();
+  });
+
+  it("should calls get user profile controller", async () => {
+    await getProfile(req, res, next);
+  });
+
+  it("should handle error 500 when its fails", async () => {
+    expect(getProfile(req, res, next)).rejects;
   });
 });

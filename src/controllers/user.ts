@@ -2,9 +2,9 @@ import HttpStatus from "http-status-codes";
 import {Request, Response, NextFunction} from "express";
 import {sign} from "jsonwebtoken";
 
-import {SECRET, MODELS} from "../config";
+import db from "../database/models";
+import {SECRET} from "../config";
 import {IRequest} from "../interfaces";
-import {findOne, create, getAll, update} from "../dao";
 import {hashPassword, comparePasswords, logger, errorMessage} from "../libs";
 
 async function createUser(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
@@ -17,7 +17,7 @@ async function createUser(request: Request, response: Response, next: NextFuncti
 
     logger.debug("params to create user: ", user);
 
-    const userEmailExist = await findOne(MODELS.USER, "email", user.email);
+    const userEmailExist = await db.User.findOne({email: user.email});
     if (userEmailExist) {
       throw errorMessage(
         HttpStatus.CONFLICT,
@@ -27,7 +27,7 @@ async function createUser(request: Request, response: Response, next: NextFuncti
     }
 
     const hashedPassword = await hashPassword(user.password);
-    const users = await create(MODELS.USER, {...user, password: hashedPassword});
+    const users = await db.User.create({...user, password: hashedPassword});
     return response.status(201).send({result: users});
   } catch (err) {
     return next(err);
@@ -38,9 +38,10 @@ async function getUsers(request: Request, response: Response, next: NextFunction
   try {
     const limit = Number(request.query.limit) || 2;
     const offset = Number(request.query.offset) || 0;
-    const users = await getAll(MODELS.USER, limit, offset);
+    const users = await db.User.findAll({limit, offset});
     return response.status(200).send({result: {users, limit, offset}});
   } catch (err) {
+    console.log("@@@ errror mail", err);
     return next(err);
   }
 }
@@ -62,7 +63,7 @@ async function updateUser(req: Request, res: Response, next: NextFunction): Prom
       returning: true
     };
 
-    const user = await update(MODELS.USER, query, req.body);
+    const user = await db.User.update(query, req.body);
 
     if (user) {
       return res.status(200).send({result: {user}});
@@ -83,7 +84,8 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
     logger.debug("login user: ", req.body.email);
 
     const {password, email} = req.body;
-    const user = await findOne(MODELS.USER, "email", email);
+    const user = await db.User.findOne({where: {email}});
+    console.log("@@ user ", user);
     if (!user) {
       throw errorMessage(
         HttpStatus.NOT_FOUND,
@@ -93,7 +95,11 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
     }
     const isValidPassword = await comparePasswords(password, user.password);
     if (!isValidPassword) {
-      throw errorMessage(HttpStatus.BAD_REQUEST, "Invalid password", HttpStatus.getStatusText(HttpStatus.BAD_REQUEST));
+      throw errorMessage(
+        HttpStatus.BAD_REQUEST,
+        "Invalid password",
+        HttpStatus.getStatusText(HttpStatus.BAD_REQUEST)
+      );
     }
 
     const token = sign({userId: user.uuid}, SECRET, {expiresIn: "1h"});
@@ -104,14 +110,15 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
       }
     });
   } catch (err) {
+    console.log("@@ error main", err);
     return next(err);
   }
 }
 
 async function getProfile(req: IRequest, res: Response, next: NextFunction): Promise<Response | void> {
   try {
-    logger.debug("get user profile by: ", req.user);
-    return res.status(200).send({result: req.user});
+    logger.debug("get user profile by: ", req.locals.user);
+    return res.status(200).send({result: req.locals.user});
   } catch (err) {
     return next(err);
   }

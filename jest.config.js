@@ -14,7 +14,6 @@ module.exports = {
     "!src/database/*/*.ts",
     "!src/middlewares/*.ts",
     "!src/libs/*.ts",
-    "!src/dao/*.ts",
     "!src/server.ts"
   ],
   testMatch: ["<rootDir>/test/**/*.spec.(ts|js)"],
