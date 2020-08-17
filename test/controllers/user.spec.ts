@@ -14,10 +14,11 @@ const mockComparePasswords = jest.fn();
 jest.mock("jsonwebtoken");
 
 jest.mock("../../src/database/models", () => ({
-  db: {
-    User: {
-      findAll: () => mockGetAll()
-    }
+  User: {
+    findAll: () => mockGetAll(),
+    findOne: () => mockFindOne(),
+    update: () => mockUpdate(),
+    create: () => mockCreate()
   }
 }));
 

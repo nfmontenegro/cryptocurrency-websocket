@@ -41,7 +41,6 @@ async function getUsers(request: Request, response: Response, next: NextFunction
     const users = await db.User.findAll({limit, offset});
     return response.status(200).send({result: {users, limit, offset}});
   } catch (err) {
-    console.log("@@@ errror mail", err);
     return next(err);
   }
 }
@@ -85,7 +84,6 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
 
     const {password, email} = req.body;
     const user = await db.User.findOne({where: {email}});
-    console.log("@@ user ", user);
     if (!user) {
       throw errorMessage(
         HttpStatus.NOT_FOUND,
@@ -110,7 +108,6 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
       }
     });
   } catch (err) {
-    console.log("@@ error main", err);
     return next(err);
   }
 }
