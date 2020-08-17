@@ -108,6 +108,7 @@ async function login(req: Request, res: Response, next: NextFunction): Promise<R
       }
     });
   } catch (err) {
+    console.log("@ error", err);
     return next(err);
   }
 }

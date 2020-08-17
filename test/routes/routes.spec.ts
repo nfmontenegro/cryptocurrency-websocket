@@ -13,7 +13,12 @@ jest.mock("jsonwebtoken", () => ({
   sign: jest.fn()
 }));
 
-jest.mock("sequelize");
+jest.mock("../../src/database/models", () => ({
+  User: {
+    findAll: () => mockGetAll(),
+    findOne: () => mockFindOne()
+  }
+}));
 
 jest.mock("../../src/libs/logger", () => ({
   info: () => jest.fn(),
